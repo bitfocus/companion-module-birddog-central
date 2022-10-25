@@ -10,5 +10,4 @@ See [HELP.md](https://github.com/bitfocus/companion-module-birddog-central/blob/
 
 ### v0.1.0
 
-- Changes
-  - Initial Module
+- Initial Module
