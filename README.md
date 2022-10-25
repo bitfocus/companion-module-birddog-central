@@ -1,4 +1,4 @@
-# companion-module-birddog-ptz
+# companion-module-birddog-central
 
 This module allows you to control [BirdDog](https://birddog.tv/central-overview/) Central 2.0 software.
 
@@ -10,5 +10,4 @@ See [HELP.md](https://github.com/bitfocus/companion-module-birddog-central/blob/
 
 ### v0.1.0
 
-- Changes
-  - Initial Module
+- Initial Module
