@@ -67,7 +67,7 @@ class instance extends instance_skel {
 		} else {
 			this.status(
 				this.STATUS_ERROR,
-				'Unable to connect, please enter an IP address for your camera in the module settings'
+				'Unable to connect, please enter an IP address for Central 2.0 in the module settings'
 			)
 		}
 	}
@@ -282,8 +282,7 @@ class instance extends instance_skel {
 				switch (subcmd) {
 					case 'info':
 						this.central.version = data.version
-						this.central.access = -1
-						//this.central.access = data.access
+						this.central.access = data.access
 						this.updateVariables()
 						break
 				}
