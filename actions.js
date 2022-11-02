@@ -1,15 +1,9 @@
 const categories = [
-	{ id: 0, category: 'Connect', actions: ['connectSourceToDest'] },
+	{ id: 0, category: 'Connect', actions: ['connectSourceToDest', 'connectSourceToDestGroup'] },
 	{
 		id: 1,
 		category: 'Source',
-		actions: [
-			'addSourceGroup',
-			'delSourceGroup',
-			'addSourceToSourceGroup',
-			'delSourceFromSourceGroup',
-			'connectSourceToDestGroup',
-		],
+		actions: ['addSourceGroup', 'delSourceGroup', 'addSourceToSourceGroup', 'delSourceFromSourceGroup'],
 	},
 	{ id: 2, category: 'Router', actions: ['addRouter', 'delRouter', 'linkRouter', 'sconnectRouter'] },
 	{ id: 3, category: 'Destination', actions: [] },
@@ -56,20 +50,20 @@ module.exports = {
 				{
 					type: 'dropdown',
 					label: 'Select Destination',
-					id: 'destinations',
+					id: 'destination',
 					choices: this.central.destinations,
 					default: this.central.destinations[0] ? this.central.destinations[0].id : 'No Destinations Found',
 				},
 			],
 			callback: ({ options }) => {
 				this.debug('---- in connectSourceToDest action')
-				this.debug('---- destination is ', options.destinations)
+				this.debug('---- destination is ', options.destination)
 				this.debug('---- source is ', options.source)
 				let source = sourceDetails(options.source)
 				this.debug('---- hname is ', source.hname)
 				this.debug('---- format is ', source.format)
 				//this.sendCommand('source', 'connect', {
-				//	dest: options.destinations,
+				//	dest: options.destination,
 				//	hname: source.hname,
 				//	format: source.format,
 				//})
@@ -189,6 +183,7 @@ module.exports = {
 						{ id: 'skip', label: 'Skip' },
 						{ id: 'loop', label: 'Loop' },
 					],
+					default: 'play',
 				},
 				{
 					type: 'dropdown',
@@ -563,11 +558,12 @@ module.exports = {
 						label: 'Select Control',
 						id: 'control',
 						choices: [
+							{ id: 'play', label: 'Play' },
+							{ id: 'stop', label: 'Stop' },
 							{ id: 'astop', label: 'Stop Audio' },
 							{ id: 'vstop', label: 'Stop Video' },
-							{ id: 'stop', label: 'Stop' },
-							{ id: 'play', label: 'Play' },
 						],
+						default: 'play',
 					},
 				],
 				callback: ({ options }) => {

@@ -176,21 +176,22 @@ class instance extends instance_skel {
 
 	processData(cmd, subcmd, data) {
 		// console.log(data);
+		let changed = []
 		switch (cmd) {
 			case 'source':
 				switch (subcmd) {
 					case 'list':
-						this.listAllSources(data)
+						changed.sources = this.listAllSources(data)
 						break
 					case 'fav_gnames':
 					case 'add_fav_grp':
 					case 'del_fav_grp':
-						this.listSourceGroups(data)
+						changed.sourceGroups = this.listSourceGroups(data)
 						break
 					case 'fav_glist':
 					case 'add_srs':
 					case 'del_srs':
-						this.sourceInfo(data)
+						changed.sourceInfo = this.sourceInfo(data)
 						break
 					case 'connect':
 						break
@@ -199,19 +200,19 @@ class instance extends instance_skel {
 			case 'dest':
 				switch (subcmd) {
 					case 'list':
-						this.listAllDestinations(data)
+						changed.destinations = this.listAllDestinations(data)
 						break
 					case 'info':
 						break
 					case 'fav_gnames':
 					case 'add_fav_grp':
 					case 'del_fav_grp':
-						this.listDestGroups(data)
+						changed.destGroups = this.listDestGroups(data)
 						break
 					case 'fav_glist':
 					case 'add_srs':
 					case 'del_srs':
-						this.destInfo(data)
+						changed.destInfo = this.destInfo(data)
 						break
 				}
 				break
@@ -220,24 +221,24 @@ class instance extends instance_skel {
 					case 'list':
 					case 'add':
 					case 'del':
-						this.listRouters(data)
+					case 'link':
+						changed.routers = this.listRouters(data)
 						break
 					case 'info':
-						this.routerInfo(data)
-						break
-					case 'link':
+						changed.routerInfo = this.routerInfo(data)
 						break
 					case 'sconnect':
-						this.routerInfo(data)
-						break
 					case 'dconnect':
+						this.sendCommand('router', 'list')
+						//changed.routerInfo = this.routerInfo(data)
+						changed.routerConnect = true
 						break
 				}
 				break
 			case 'gen':
 				switch (subcmd) {
 					case 'list':
-						this.listGenerators(data)
+						changed.generator = this.listGenerators(data)
 						break
 					case 'glist':
 						break
@@ -245,7 +246,7 @@ class instance extends instance_skel {
 					case 'del_fav_grp':
 						break
 					case 'srs_list':
-						this.listGenSources(data)
+						changed.genSources = this.listGenSources(data)
 						break
 					case 'info':
 					case 'add_srs':
@@ -256,7 +257,7 @@ class instance extends instance_skel {
 					case 'skip':
 					case 'stop':
 					case 'loop':
-						this.generatorInfo(data)
+						changed.generatorInfo = this.generatorInfo(data)
 						break
 				}
 				break
@@ -265,7 +266,7 @@ class instance extends instance_skel {
 					case 'list':
 					case 'add':
 					case 'delete':
-						this.listRetransmitters(data)
+						changed.retransmitters = this.listRetransmitters(data)
 						break
 					case 'info':
 					case 'vconnect':
@@ -274,7 +275,7 @@ class instance extends instance_skel {
 					case 'astop':
 					case 'stop':
 					case 'play':
-						this.retransmitterInfo(data)
+						changed.retransmittersInfo = this.retransmitterInfo(data)
 						break
 				}
 				break
@@ -283,24 +284,45 @@ class instance extends instance_skel {
 					case 'info':
 						this.central.version = data.version
 						this.central.access = data.access
-						this.updateVariables()
+						changed.info = true
 						break
 				}
 				break
 			case 'version':
 				this.central.version = data
-				this.updateVariables()
+				changed.version = true
 				break
 		}
-		this.actions()
-		this.initFeedbacks()
-		//this.checkFeedbacks()
+		if (
+			changed.sources ||
+			changed.sourceGroups ||
+			changed.sourceInfo ||
+			changed.destinations ||
+			changed.destGroups ||
+			changed.destInfo ||
+			changed.routers ||
+			changed.routerInfo ||
+			changed.generator ||
+			changed.genSources ||
+			changed.retransmitters
+		) {
+			console.log('---update actions / feedbacks / presets')
+			this.actions()
+			this.initFeedbacks()
+			this.initPresets()
+		}
+		if (changed.generatorInfo || changed.routerConnect || changed.retransmittersInfo) {
+			console.log('---check feedbacks')
+			this.checkFeedbacks()
+		}
+		if (changed.info || changed.version) {
+			console.log('---update variables')
+			this.updateVariables()
+		}
 	}
 
 	getInitialConfig() {
 		this.sendCommand('server', 'info')
-		this.actions()
-		this.initFeedbacks()
 		this.initVariables()
 		this.startPolling()
 	}
@@ -353,11 +375,20 @@ class instance extends instance_skel {
 	// Functions
 
 	listAllSources(data) {
-		this.central.sources = this.sourceList(data.ndi_find_results[0].sources)
+		let sources = this.sourceList(data.ndi_find_results[0].sources)
+		let different = this.isDifferent(this.central.sources, sources)
+		if (different) {
+			this.central.sources = sources
+		}
+		return different
 	}
 
 	listAllDestinations(data) {
-		this.central.destinations = this.destList(data.mdns_find_results)
+		let destinations = this.destList(data.mdns_find_results)
+		let different = this.isDifferent(this.central.destinations, destinations)
+		if (different) {
+			this.central.destinations = destinations
+		}
 	}
 
 	listSourceGroups(data) {
@@ -365,10 +396,14 @@ class instance extends instance_skel {
 		data.group_names.forEach((element) => {
 			names.push(element)
 		})
-		this.central.sourcegroups = this.groupList(names)
+		let different = this.isDifferent(this.central.sourcegroups, this.groupList(names))
+		if (different) {
+			this.central.sourcegroups = this.groupList(names)
+		}
 		names.forEach((element) => {
 			this.sendCommand('source', 'fav_glist', { gname: element })
 		})
+		return different
 	}
 
 	sourceInfo(data) {
@@ -382,7 +417,14 @@ class instance extends instance_skel {
 			})
 			sources.push(result)
 		})
-		this.central.sourcegroups[idx].sources = sources
+		if (!this.central.sourcegroups[idx].sources) {
+			this.central.sourcegroups[idx].sources = []
+		}
+		let different = this.isDifferent(this.central.sourcegroups[idx].sources, sources)
+		if (different) {
+			this.central.sourcegroups[idx].sources = sources
+		}
+		return different
 	}
 
 	listDestGroups(data) {
@@ -390,10 +432,14 @@ class instance extends instance_skel {
 		data.group_names.forEach((element) => {
 			names.push(element)
 		})
-		this.central.destgroups = this.groupList(names)
+		let different = this.isDifferent(this.central.destgroups, this.groupList(names))
+		if (different) {
+			this.central.destgroups = this.groupList(names)
+		}
 		names.forEach((element) => {
 			this.sendCommand('dest', 'fav_glist', { gname: element })
 		})
+		return different
 	}
 
 	destInfo(data) {
@@ -407,7 +453,14 @@ class instance extends instance_skel {
 			})
 			dest.push(result)
 		})
-		this.central.destgroups[idx].destintaions = dest
+		if (!this.central.destgroups[idx].destinations) {
+			this.central.destgroups[idx].destinations = []
+		}
+		let different = this.isDifferent(this.central.destgroups[idx].destintaions, dest)
+		if (different) {
+			this.central.destgroups[idx].destintaions = dest
+		}
+		return different
 	}
 
 	listRouters(data) {
@@ -415,18 +468,29 @@ class instance extends instance_skel {
 		data.routers.forEach((element) => {
 			names.push(element.name)
 		})
-		this.central.routers = this.groupList(names)
+		let different = this.isDifferent(this.central.routers, this.groupList(names))
+		if (different) {
+			this.central.routers = this.groupList(names)
+		}
 		names.forEach((element) => {
 			this.sendCommand('router', 'info', { name: element })
 		})
+		return different
 	}
 
 	routerInfo(data) {
 		let idx = this.central.routers.findIndex((element) => element.id == data.router)
 		if (idx < 0) return
-		this.central.routers[idx].name = data.name
-		this.central.routers[idx].src_group = data.src_group
-		this.central.routers[idx].url = data.url
+		let different =
+			this.central.routers[idx].name != data.name ||
+			this.central.routers[idx].src_group != data.src_group ||
+			this.central.routers[idx].url != data.url
+		if (different) {
+			this.central.routers[idx].name = data.name
+			this.central.routers[idx].src_group = data.src_group
+			this.central.routers[idx].url = data.url
+		}
+		return different
 	}
 
 	listGenerators(data) {
@@ -434,19 +498,31 @@ class instance extends instance_skel {
 		data.generators.forEach((element) => {
 			names.push(element.group_name)
 		})
-		this.central.generators = this.groupList(names)
+		let different = this.isDifferent(this.central.generators, this.groupList(names))
+		if (different) {
+			this.central.generators = this.groupList(names)
+		}
 		names.forEach((element) => {
 			this.sendCommand('gen', 'info', { gname: element })
 		})
+		return different
 	}
 
 	generatorInfo(data) {
 		let generator = data.generators[0]
 		let idx = this.central.generators.findIndex((element) => element.id == generator.group_name)
 		if (idx < 0) return
-		this.central.generators[idx].loop = generator.loop
-		this.central.generators[idx].playlist = generator.playlist
-		this.central.generators[idx].status = generator.status
+		if (!this.central.generators[idx].playlist) this.central.generators[idx].playlist = []
+		let different =
+			this.central.generators[idx].loop != generator.loop ||
+			this.isDifferent(this.central.generators[idx].playlist, generator.playlist) ||
+			this.central.generators[idx].status != generator.status
+		if (different) {
+			this.central.generators[idx].loop = generator.loop
+			this.central.generators[idx].playlist = generator.playlist
+			this.central.generators[idx].status = generator.status
+		}
+		return different
 	}
 
 	listGenSources(data) {
@@ -454,7 +530,11 @@ class instance extends instance_skel {
 		data.gen_sources.forEach((element) => {
 			names.push(element)
 		})
-		this.central.gen_sources = this.groupList(names)
+		let different = this.isDifferent(this.central.gen_sources, this.groupList(names))
+		if (different) {
+			this.central.gen_sources = this.groupList(names)
+		}
+		return different
 	}
 
 	listRetransmitters(data) {
@@ -472,12 +552,22 @@ class instance extends instance_skel {
 		let retransmitter = data.retransmitters[0]
 		let idx = this.central.retransmitters.findIndex((element) => element.id == retransmitter.Name)
 		if (idx < 0) return
-		this.central.retransmitters[idx].AudioNDIname = retransmitter.AudioNDIname
-		this.central.retransmitters[idx].AudioPlayStatus = retransmitter.AudioPlayStatus
-		this.central.retransmitters[idx].AudioURL = retransmitter.AudioURL
-		this.central.retransmitters[idx].VideoNDIname = retransmitter.VideoNDIname
-		this.central.retransmitters[idx].VideoPlayStatus = retransmitter.VideoPlayStatus
-		this.central.retransmitters[idx].VideoURL = retransmitter.VideoURL
+		let different =
+			this.central.retransmitters[idx].AudioNDIname != retransmitter.AudioNDIname ||
+			this.central.retransmitters[idx].AudioPlayStatus != retransmitter.AudioPlayStatus ||
+			this.central.retransmitters[idx].AudioURL != retransmitter.AudioURL ||
+			this.central.retransmitters[idx].VideoNDIname != retransmitter.VideoNDIname ||
+			this.central.retransmitters[idx].VideoPlayStatus != retransmitter.VideoPlayStatus ||
+			this.central.retransmitters[idx].VideoURL != retransmitter.VideoURL
+		if (different) {
+			this.central.retransmitters[idx].AudioNDIname = retransmitter.AudioNDIname
+			this.central.retransmitters[idx].AudioPlayStatus = retransmitter.AudioPlayStatus
+			this.central.retransmitters[idx].AudioURL = retransmitter.AudioURL
+			this.central.retransmitters[idx].VideoNDIname = retransmitter.VideoNDIname
+			this.central.retransmitters[idx].VideoPlayStatus = retransmitter.VideoPlayStatus
+			this.central.retransmitters[idx].VideoURL = retransmitter.VideoURL
+		}
+		return different
 	}
 
 	/// Utility Functions
@@ -486,7 +576,7 @@ class instance extends instance_skel {
 		// Create list of sources, with added ID and Label. Also include returned detail
 		let list = []
 		data.forEach((element) => {
-			let str = element.host_name + ' (' + element.format + ')'
+			let str = element.host_name + '(' + element.format + ')'
 			list.push({ id: str, label: str, ...element })
 		})
 		return list
@@ -507,6 +597,12 @@ class instance extends instance_skel {
 			list.push({ id: element, label: element })
 		})
 		return list
+	}
+
+	isDifferent(stored, data) {
+		//console.log('stored', stored)
+		//console.log('data', data)
+		return !(stored.join() == data.join())
 	}
 }
 exports = module.exports = instance
