@@ -33,6 +33,7 @@ exports.initFeedbacks = function () {
 					{ id: 'pause', label: 'Pause' },
 					{ id: 'loop', label: 'Loop' },
 				],
+				default: 'play',
 			},
 			{
 				type: 'dropdown',
@@ -49,13 +50,13 @@ exports.initFeedbacks = function () {
 		callback: ({ options }) => {
 			switch (options.control) {
 				case 'loop':
-					return this.central.generators.find((element) => (element.id = options.generator)).loop == options.loop
+					return this.central.generators.find((element) => element.id == options.generator).loop == options.loop
 				case 'play':
-					return this.central.generators.find((element) => (element.id = options.generator)).status == 'Playing'
+					return this.central.generators.find((element) => element.id == options.generator).status == 'Playing'
 				case 'stop':
-					return this.central.generators.find((element) => (element.id = options.generator)).status == 'Not Playing'
+					return this.central.generators.find((element) => element.id == options.generator).status == 'Not Playing'
 				case 'pause':
-					return this.central.generators.find((element) => (element.id = options.generator)).status == 'Pause'
+					return this.central.generators.find((element) => element.id == options.generator).status == 'Pause'
 			}
 		},
 	}
@@ -86,7 +87,7 @@ exports.initFeedbacks = function () {
 				},
 			],
 			callback: ({ options }) => {
-				return this.central.routers.find((router) => (router.id = options.router)).name == options.source
+				return (this.central.routers.find((router) => router.id == options.router).name = options.source)
 			},
 		}
 
@@ -102,7 +103,7 @@ exports.initFeedbacks = function () {
 				{
 					type: 'dropdown',
 					label: 'Select Retransmitter',
-					id: 'restransmitter',
+					id: 'retransmitter',
 					choices: this.central.retransmitters,
 					default: this.central.retransmitters[0] ? this.central.retransmitters[0].id : '',
 				},
@@ -115,9 +116,13 @@ exports.initFeedbacks = function () {
 				},
 			],
 			callback: ({ options }) => {
+				// temporary due to API in v2.0.5.0 not returning the sources in a different format from the rest of the API
+				tempSource = options.source
+					.substring(0, options.source.indexOf('('))
+					.concat(' ', options.source.substring(options.source.indexOf('(')))
 				return (
-					this.central.retransmitters.find((retransmitters) => (retransmitters.id = options.retransmitters))
-						.AudioNDIname == options.source
+					this.central.retransmitters.find((retransmitters) => retransmitters.id == options.retransmitter)
+						.AudioNDIname == tempSource
 				)
 			},
 		}
@@ -133,7 +138,7 @@ exports.initFeedbacks = function () {
 				{
 					type: 'dropdown',
 					label: 'Select Retransmitter',
-					id: 'restransmitter',
+					id: 'retransmitter',
 					choices: this.central.retransmitters,
 					default: this.central.retransmitters[0] ? this.central.retransmitters[0].id : '',
 				},
@@ -150,7 +155,7 @@ exports.initFeedbacks = function () {
 			],
 			callback: ({ options }) => {
 				return (
-					this.central.retransmitters.find((retransmitters) => (retransmitters.id = options.retransmitters))
+					this.central.retransmitters.find((retransmitters) => retransmitters.id == options.retransmitter)
 						.AudioPlayStatus == options.status
 				)
 			},
@@ -168,7 +173,7 @@ exports.initFeedbacks = function () {
 				{
 					type: 'dropdown',
 					label: 'Select Retransmitter',
-					id: 'restransmitter',
+					id: 'retransmitter',
 					choices: this.central.retransmitters,
 					default: this.central.retransmitters[0] ? this.central.retransmitters[0].id : '',
 				},
@@ -181,9 +186,13 @@ exports.initFeedbacks = function () {
 				},
 			],
 			callback: ({ options }) => {
+				// temporary due to API in v2.0.5.0 not returning the sources in a different format from the rest of the API
+				tempSource = options.source
+					.substring(0, options.source.indexOf('('))
+					.concat(' ', options.source.substring(options.source.indexOf('(')))
 				return (
-					this.central.retransmitters.find((retransmitters) => (retransmitters.id = options.retransmitters))
-						.VideoNDIname == options.source
+					this.central.retransmitters.find((retransmitters) => retransmitters.id == options.retransmitter)
+						.VideoNDIname == tempSource
 				)
 			},
 		}
@@ -199,7 +208,7 @@ exports.initFeedbacks = function () {
 				{
 					type: 'dropdown',
 					label: 'Select Retransmitter',
-					id: 'restransmitter',
+					id: 'retransmitter',
 					choices: this.central.retransmitters,
 					default: this.central.retransmitters[0] ? this.central.retransmitters[0].id : '',
 				},
@@ -216,7 +225,7 @@ exports.initFeedbacks = function () {
 			],
 			callback: ({ options }) => {
 				return (
-					this.central.retransmitters.find((retransmitters) => (retransmitters.id = options.retransmitters))
+					this.central.retransmitters.find((retransmitters) => retransmitters.id == options.retransmitter)
 						.VideoPlayStatus == options.status
 				)
 			},

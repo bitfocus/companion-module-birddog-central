@@ -56,12 +56,7 @@ module.exports = {
 				},
 			],
 			callback: ({ options }) => {
-				this.debug('---- in connectSourceToDest action')
-				this.debug('---- destination is ', options.destination)
-				this.debug('---- source is ', options.source)
 				let source = sourceDetails(options.source)
-				this.debug('---- hname is ', source.hname)
-				this.debug('---- format is ', source.format)
 				//this.sendCommand('source', 'connect', {
 				//	dest: options.destination,
 				//	hname: source.hname,
@@ -80,8 +75,6 @@ module.exports = {
 				},
 			],
 			callback: ({ options }) => {
-				this.debug('---- in addGenerator action')
-				this.debug('---- generator is ', options.generator)
 				this.sendCommand('gen', 'add_fav_grp', { gname: options.generator })
 			},
 		}
@@ -98,8 +91,6 @@ module.exports = {
 				},
 			],
 			callback: ({ options }) => {
-				this.debug('---- in delGenerator action')
-				this.debug('---- generator is ', options.generator)
 				this.sendCommand('gen', 'del_fav_grp', { gname: options.generator })
 			},
 		}
@@ -123,9 +114,6 @@ module.exports = {
 				},
 			],
 			callback: ({ options }) => {
-				this.debug('---- in addPlaylistToGenerator action')
-				this.debug('---- generator is ', options.generator)
-				this.debug('---- playlist is ', options.playlist)
 				this.sendCommand('gen', 'add_srs', {
 					gname: options.generator,
 					name: options.playlist,
@@ -152,9 +140,6 @@ module.exports = {
 				},
 			],
 			callback: ({ options }) => {
-				this.debug('---- in addPlaylistToGenerator action')
-				this.debug('---- generator is ', options.generator)
-				this.debug('---- playlist is ', options.playlist)
 				this.sendCommand('gen', 'del_srs', {
 					gname: options.generator,
 					name: options.playlist,
@@ -199,14 +184,10 @@ module.exports = {
 				},
 			],
 			callback: ({ options }) => {
-				this.debug('---- in generatorMediaControl action')
-				this.debug('---- generator is ', options.generator)
-				this.debug('---- control is ', options.control)
 				if (options.control == 'loop') {
 					let loop = options.loop
 					if (options.loop == 'TOGGLE') {
 						let currentState = this.central.generators.find((element) => (element.id = options.generator)).loop
-						this.debug('---- current loop is ', currentState)
 						switch (currentState) {
 							case 'TRUE':
 								loop = 'FALSE'
@@ -215,7 +196,6 @@ module.exports = {
 								loop = 'TRUE'
 								break
 						}
-						this.debug('---- new loop is ', currentState)
 					}
 					this.sendCommand('gen', options.control, {
 						gname: options.generator,
@@ -242,8 +222,6 @@ module.exports = {
 					},
 				],
 				callback: ({ options }) => {
-					this.debug('---- in addSourceGroup action')
-					this.debug('---- group is ', options.group)
 					this.sendCommand('source', 'add_fav_grp', { gname: options.group })
 				},
 			}
@@ -260,8 +238,6 @@ module.exports = {
 					},
 				],
 				callback: ({ options }) => {
-					this.debug('---- in delSourceGroup action')
-					this.debug('---- group is ', options.group)
 					this.sendCommand('source', 'del_fav_grp', { gname: options.group })
 				},
 			}
@@ -285,12 +261,7 @@ module.exports = {
 					},
 				],
 				callback: ({ options }) => {
-					this.debug('---- in addSourceToSourceGroup action')
-					this.debug('---- group is ', options.group)
-					this.debug('---- source is ', options.source)
 					let source = sourceDetails(options.source)
-					this.debug('---- hame is ', source.hname)
-					this.debug('---- format is ', source.format)
 					this.sendCommand('source', 'add_srs', {
 						gname: options.group,
 						hname: source.hname,
@@ -318,12 +289,7 @@ module.exports = {
 					},
 				],
 				callback: ({ options }) => {
-					this.debug('---- in delSourceFromSourceGroup action')
-					this.debug('---- group is ', options.group)
-					this.debug('---- source is ', options.source)
 					let source = sourceDetails(options.source)
-					this.debug('---- hame is ', source.hname)
-					this.debug('---- format is ', source.format)
 					this.sendCommand('source', 'del_srs', {
 						gname: options.group,
 						hname: source.hname,
@@ -351,12 +317,7 @@ module.exports = {
 					},
 				],
 				callback: ({ options }) => {
-					this.debug('---- in connectSourceToDestGroup action')
-					this.debug('---- group is ', options.group)
-					this.debug('---- source is ', options.source)
 					let source = sourceDetails(options.source)
-					this.debug('---- hame is ', source.hname)
-					this.debug('---- format is ', source.format)
 					this.sendCommand('source', 'connect', {
 						gname: options.group,
 						hname: source.hname,
@@ -375,8 +336,6 @@ module.exports = {
 					},
 				],
 				callback: ({ options }) => {
-					this.debug('---- in addRouter action')
-					this.debug('---- router is ', options.router)
 					this.sendCommand('router', 'add', { name: options.router })
 				},
 			}
@@ -393,8 +352,6 @@ module.exports = {
 					},
 				],
 				callback: ({ options }) => {
-					this.debug('---- in delRouter action')
-					this.debug('---- router is ', options.router)
 					this.sendCommand('router', 'del', { name: options.router })
 				},
 			}
@@ -418,9 +375,6 @@ module.exports = {
 					},
 				],
 				callback: ({ options }) => {
-					this.debug('---- in linkRouter action')
-					this.debug('---- router is ', options.router)
-					this.debug('---- source group is ', options.group)
 					this.sendCommand('router', 'link', { gname: options.group, name: options.router })
 				},
 			}
@@ -463,8 +417,6 @@ module.exports = {
 					},
 				],
 				callback: ({ options }) => {
-					this.debug('---- in addRetransmitter action')
-					this.debug('---- retransmitter is ', options.retransmitter)
 					this.sendCommand('retransmtr', 'add', { name: options.retransmitter })
 				},
 			}
@@ -481,8 +433,6 @@ module.exports = {
 					},
 				],
 				callback: ({ options }) => {
-					this.debug('---- in delRetransmitter action')
-					this.debug('---- retransmitter is ', options.retransmitter)
 					this.sendCommand('retransmtr', 'delete', { name: options.retransmitter })
 				},
 			}
@@ -495,7 +445,7 @@ module.exports = {
 						label: 'Select Retransmitter',
 						id: 'retransmitter',
 						choices: this.central.retransmitters,
-						default: this.central.retransmitters[0] ? this.central.retransmitters[0].id : 'No Retransmitters Found',
+						//default: this.central.retransmitters[0] ? this.central.retransmitters[0].id : 'No Retransmitters Found',
 					},
 					{
 						type: 'dropdown',
@@ -523,7 +473,7 @@ module.exports = {
 						label: 'Select Retransmitter',
 						id: 'retransmitter',
 						choices: this.central.retransmitters,
-						default: this.central.retransmitters[0] ? this.central.retransmitters[0].id : 'No Retransmitters Found',
+						//default: this.central.retransmitters[0] ? this.central.retransmitters[0].id : 'No Retransmitters Found',
 					},
 					{
 						type: 'dropdown',
@@ -567,9 +517,6 @@ module.exports = {
 					},
 				],
 				callback: ({ options }) => {
-					this.debug('---- in mediaControlRetransmitter action')
-					this.debug('---- retransmitter is ', options.retransmitter)
-					this.debug('---- control is ', options.control)
 					this.sendCommand('retransmtr', options.control, { name: options.retransmitter })
 				},
 			}

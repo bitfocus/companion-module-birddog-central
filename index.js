@@ -137,7 +137,7 @@ class instance extends instance_skel {
 			str = cmd
 		}
 
-		this.debug('---- Command String is', str)
+		//this.debug('---- Command String is', str)
 
 		let url = `http://${this.config.host}:8080/` + str
 		let options = {
@@ -175,7 +175,7 @@ class instance extends instance_skel {
 	}
 
 	processData(cmd, subcmd, data) {
-		// console.log(data);
+		// this.debug(data);
 		let changed = []
 		switch (cmd) {
 			case 'source':
@@ -306,17 +306,14 @@ class instance extends instance_skel {
 			changed.genSources ||
 			changed.retransmitters
 		) {
-			console.log('---update actions / feedbacks / presets')
 			this.actions()
 			this.initFeedbacks()
 			this.initPresets()
 		}
 		if (changed.generatorInfo || changed.routerConnect || changed.retransmittersInfo) {
-			console.log('---check feedbacks')
 			this.checkFeedbacks()
 		}
 		if (changed.info || changed.version) {
-			console.log('---update variables')
 			this.updateVariables()
 		}
 	}
@@ -359,14 +356,7 @@ class instance extends instance_skel {
 		this.sendCommand('gen', 'list')
 		this.sendCommand('gen', 'srs_list')
 		this.sendCommand('retransmtr', 'list')
-		console.log('---- Central details: ', this.central)
-		console.log('---- sources: ', this.central.sources)
-		console.log('---- sourcegroups: ', this.central.sourcegroups)
-		console.log('---- destgroups: ', this.central.destgroups)
-		console.log('---- routers: ', this.central.routers)
-		console.log('---- generators: ', this.central.generators)
-		console.log('---- gen_sources: ', this.central.gen_sources)
-		console.log('---- retransmitters: ', this.central.retransmitters)
+		this.debug('---- Central details: ', this.central)
 	}
 
 	// Get Central Status
@@ -600,8 +590,6 @@ class instance extends instance_skel {
 	}
 
 	isDifferent(stored, data) {
-		//console.log('stored', stored)
-		//console.log('data', data)
 		return !(stored.join() == data.join())
 	}
 }
