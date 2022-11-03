@@ -310,6 +310,9 @@ class instance extends instance_skel {
 			this.actions()
 			this.initFeedbacks()
 			this.initPresets()
+			// If generators have changed, then recreate variables
+			console.log('changed generators: ', changed.generator)
+			if (changed.generator) this.initVariables()
 		}
 		if (changed.generatorInfo || changed.routerConnect || changed.retransmittersInfo) {
 			// The status of something has changed, so need to check feedbacks
