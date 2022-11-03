@@ -306,14 +306,17 @@ class instance extends instance_skel {
 			changed.genSources ||
 			changed.retransmitters
 		) {
+			// Something has changed, so need to re-initialise actions/feedbacks/presets
 			this.actions()
 			this.initFeedbacks()
 			this.initPresets()
 		}
 		if (changed.generatorInfo || changed.routerConnect || changed.retransmittersInfo) {
+			// The status of something has changed, so need to check feedbacks
 			this.checkFeedbacks()
 		}
 		if (changed.info || changed.version) {
+			// Only update variables
 			this.updateVariables()
 		}
 	}
@@ -365,6 +368,9 @@ class instance extends instance_skel {
 	// Functions
 
 	listAllSources(data) {
+		// data should contain all sources from API
+		// Compare against what is stored
+		// Return true if changed
 		let sources = this.sourceList(data.ndi_find_results[0].sources)
 		let different = this.isDifferent(this.central.sources, sources)
 		if (different) {
@@ -374,6 +380,9 @@ class instance extends instance_skel {
 	}
 
 	listAllDestinations(data) {
+		// data should contain all destinations from API
+		// Compare against what is stored
+		// Return true if changed
 		let destinations = this.destList(data.mdns_find_results)
 		let different = this.isDifferent(this.central.destinations, destinations)
 		if (different) {
@@ -382,6 +391,10 @@ class instance extends instance_skel {
 	}
 
 	listSourceGroups(data) {
+		// data should contain all sourcesgroups from API
+		// Compare against what is stored
+		// Return true if changed
+		// For each source group, query group
 		let names = []
 		data.group_names.forEach((element) => {
 			names.push(element)
@@ -397,6 +410,10 @@ class instance extends instance_skel {
 	}
 
 	sourceInfo(data) {
+		// data should contain details of a source group from API
+		// create array of sources based on source name from source group
+		// Compare against what is stored
+		// Return true if changed
 		let group = data.favourite_source_groups[0]
 		let idx = this.central.sourcegroups.findIndex((element) => element.id == group.group_name)
 		if (idx < 0) return
@@ -418,6 +435,10 @@ class instance extends instance_skel {
 	}
 
 	listDestGroups(data) {
+		// data should contain all destgroups from API
+		// Compare against what is stored
+		// Return true if changed
+		// For each dest group, query group
 		let names = []
 		data.group_names.forEach((element) => {
 			names.push(element)
@@ -433,6 +454,10 @@ class instance extends instance_skel {
 	}
 
 	destInfo(data) {
+		// data should contain details of a dest group from API
+		// create array of destinations based on destination name from dest group
+		// Compare against what is stored
+		// Return true if changed
 		let group = data.favourite_destination_groups[0]
 		let idx = this.central.datagroups.findIndex((element) => element.id == group.group_name)
 		if (idx < 0) return
@@ -454,6 +479,10 @@ class instance extends instance_skel {
 	}
 
 	listRouters(data) {
+		// data should contain all routers from API
+		// Compare against what is stored
+		// Return true if changed
+		// For each router, query router
 		let names = []
 		data.routers.forEach((element) => {
 			names.push(element.name)
@@ -469,6 +498,9 @@ class instance extends instance_skel {
 	}
 
 	routerInfo(data) {
+		// data should contain details of a router from API
+		// Compare against what is stored
+		// Return true if changed
 		let idx = this.central.routers.findIndex((element) => element.id == data.router)
 		if (idx < 0) return
 		let different =
@@ -484,6 +516,10 @@ class instance extends instance_skel {
 	}
 
 	listGenerators(data) {
+		// data should contain all generators from API
+		// Compare against what is stored
+		// Return true if changed
+		// For each generator, query generator
 		let names = []
 		data.generators.forEach((element) => {
 			names.push(element.group_name)
@@ -499,6 +535,9 @@ class instance extends instance_skel {
 	}
 
 	generatorInfo(data) {
+		// data should contain details of a generator from API
+		// Compare against what is stored
+		// Return true if changed
 		let generator = data.generators[0]
 		let idx = this.central.generators.findIndex((element) => element.id == generator.group_name)
 		if (idx < 0) return
@@ -516,6 +555,9 @@ class instance extends instance_skel {
 	}
 
 	listGenSources(data) {
+		// data should contain all generator sources from API
+		// Compare against what is stored
+		// Return true if changed
 		let names = []
 		data.gen_sources.forEach((element) => {
 			names.push(element)
@@ -528,6 +570,10 @@ class instance extends instance_skel {
 	}
 
 	listRetransmitters(data) {
+		// data should contain all retransmitters from API
+		// Compare against what is stored
+		// Return true if changed
+		// For each retransmitter, query retransmitter
 		let names = []
 		data.retransmitters.forEach((element) => {
 			names.push(element)
@@ -539,6 +585,9 @@ class instance extends instance_skel {
 	}
 
 	retransmitterInfo(data) {
+		// data should contain details of a retransmitter from API
+		// Compare against what is stored
+		// Return true if changed
 		let retransmitter = data.retransmitters[0]
 		let idx = this.central.retransmitters.findIndex((element) => element.id == retransmitter.Name)
 		if (idx < 0) return
@@ -582,6 +631,7 @@ class instance extends instance_skel {
 	}
 
 	groupList(data) {
+		// Create list of groups, with added ID and Label
 		let list = []
 		data.forEach((element) => {
 			list.push({ id: element, label: element })
@@ -590,6 +640,8 @@ class instance extends instance_skel {
 	}
 
 	isDifferent(stored, data) {
+		// Compare 2 different arrays
+		// Return true if different
 		return !(stored.join() == data.join())
 	}
 }
