@@ -335,7 +335,7 @@ class instance extends instance_skel {
 
 		// Repeat the poll at set intervals
 		this.timers.pollCentralConfig = setInterval(this.pollCentralConfig.bind(this), 10000) // No need to poll frequently
-		//this.timers.pollCentralStatus = setInterval(this.pollCentralStatus.bind(this), 3000) // This will be used to get status of the camera
+		this.timers.pollCentralStatus = setInterval(this.pollCentralStatus.bind(this), 3000) // This will be used to get status of the camera
 	}
 
 	stopPolling() {
@@ -352,18 +352,28 @@ class instance extends instance_skel {
 
 	// Get Central configuration
 	pollCentralConfig() {
-		this.sendCommand('source', 'list')
-		this.sendCommand('source', 'fav_gnames')
-		this.sendCommand('source', 'fav_glist')
-		this.sendCommand('router', 'list')
-		this.sendCommand('gen', 'list')
-		this.sendCommand('gen', 'srs_list')
-		this.sendCommand('retransmtr', 'list')
-		this.debug('---- Central details: ', this.central)
+		this.sendCommand('server', 'info')
 	}
 
 	// Get Central Status
-	pollCentralStatus() {}
+	pollCentralStatus() {
+		this.sendCommand('source', 'list')
+		this.sendCommand('gen', 'list')
+		this.sendCommand('gen', 'srs_list')
+
+		if (this.central.access >= 0) {
+			this.sendCommand('source', 'fav_gnames')
+			this.sendCommand('source', 'fav_glist')
+			this.sendCommand('dest', 'list')
+			this.sendCommand('dest', 'fav_gnames')
+			this.sendCommand('dest', 'fav_glist')
+			this.sendCommand('router', 'list')
+			this.sendCommand('gen', 'list')
+			this.sendCommand('gen', 'srs_list')
+			this.sendCommand('retransmtr', 'list')
+		}
+		this.debug('---- Central details: ', this.central)
+	}
 
 	// Functions
 
@@ -371,7 +381,7 @@ class instance extends instance_skel {
 		// data should contain all sources from API
 		// Compare against what is stored
 		// Return true if changed
-		let sources = this.sourceList(data.ndi_find_results[0].sources)
+		let sources = data.ndi_find_results[0]?.sources ? this.sourceList(data.ndi_find_results[0].sources) : []
 		let different = this.isDifferent(this.central.sources, sources)
 		if (different) {
 			this.central.sources = sources
@@ -391,7 +401,7 @@ class instance extends instance_skel {
 	}
 
 	listSourceGroups(data) {
-		// data should contain all sourcesgroups from API
+		// data should contain all sourcegroups from API
 		// Compare against what is stored
 		// Return true if changed
 		// For each source group, query group
@@ -459,7 +469,7 @@ class instance extends instance_skel {
 		// Compare against what is stored
 		// Return true if changed
 		let group = data.favourite_destination_groups[0]
-		let idx = this.central.datagroups.findIndex((element) => element.id == group.group_name)
+		let idx = this.central.destgroups.findIndex((element) => element.id == group.group_name)
 		if (idx < 0) return
 		let dest = []
 		group.destinations.forEach((element) => {
@@ -471,9 +481,9 @@ class instance extends instance_skel {
 		if (!this.central.destgroups[idx].destinations) {
 			this.central.destgroups[idx].destinations = []
 		}
-		let different = this.isDifferent(this.central.destgroups[idx].destintaions, dest)
+		let different = this.isDifferent(this.central.destgroups[idx].destinations, dest)
 		if (different) {
-			this.central.destgroups[idx].destintaions = dest
+			this.central.destgroups[idx].destinations = dest
 		}
 		return different
 	}
@@ -589,6 +599,7 @@ class instance extends instance_skel {
 		// Compare against what is stored
 		// Return true if changed
 		let retransmitter = data.retransmitters[0]
+
 		let idx = this.central.retransmitters.findIndex((element) => element.id == retransmitter.Name)
 		if (idx < 0) return
 		let different =
