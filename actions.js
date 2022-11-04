@@ -533,12 +533,6 @@ function sourceDetails(string) {
 	return result
 }
 
-function userDefinedGroups(str, array) {
-	let idx = array.findIndex((element) => (element.id = str))
-	array.splice(idx, 1)
-	return array
-}
-
 function sortByCategory(a, b) {
 	categoryA = categories.find((element) => element.actions.includes(a[0])).id
 	categoryB = categories.find((element) => element.actions.includes(b[0])).id
