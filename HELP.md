@@ -24,7 +24,6 @@ This module allows you to control [BirdDog](https://birddog.tv/central-overview/
   - Retransmitter Audio Source
   - Retransmitter Audio Status
   - Retransmitter Video Source
-  - Retransmitter Video Status
 
 - Variables
   - Software version
