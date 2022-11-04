@@ -1,6 +1,6 @@
 {
 	"name": "birddog-central",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"api_version": "1.0.0",
 	"keywords": [
 		"BirdDog",
@@ -10,7 +10,7 @@
 	"manufacturer": "BirdDog",
 	"product": "Central",
 	"shortname": "BirdDog Central",
-	"description": "This module controls BirdDog Central software.",
+	"description": "This module controls BirdDog Central 2.0 software.",
 	"main": "index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"

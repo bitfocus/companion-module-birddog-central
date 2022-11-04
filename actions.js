@@ -1,3 +1,36 @@
+const categories = [
+	{ id: 0, category: 'Connect', actions: ['connectSourceToDest', 'connectSourceToDestGroup'] },
+	{
+		id: 1,
+		category: 'Source',
+		actions: ['addSourceGroup', 'delSourceGroup', 'addSourceToSourceGroup', 'delSourceFromSourceGroup'],
+	},
+	{ id: 2, category: 'Router', actions: ['addRouter', 'delRouter', 'linkRouter', 'sconnectRouter'] },
+	{ id: 3, category: 'Destination', actions: [] },
+	{
+		id: 4,
+		category: 'Generator',
+		actions: [
+			'addGenerator',
+			'delGenerator',
+			'addPlaylistToGenerator',
+			'delPlaylistFromGenerator',
+			'generatorMediaControl',
+		],
+	},
+	{
+		id: 5,
+		category: 'Retransmitter',
+		actions: [
+			'addRetransmitter',
+			'delRetransmitter',
+			'vconnectRetransmitter',
+			'aconnectRetransmitter',
+			'mediaControlRetransmitter',
+		],
+	},
+]
+
 module.exports = {
 	getActions() {
 		let actions = {}
@@ -12,25 +45,20 @@ module.exports = {
 					label: 'Select Source',
 					id: 'source',
 					choices: this.central.sources,
-					default: '',
+					default: this.central.sources[0] ? this.central.sources[0].id : 'No Sources found',
 				},
 				{
 					type: 'dropdown',
 					label: 'Select Destination',
-					id: 'destinations',
+					id: 'destination',
 					choices: this.central.destinations,
-					default: '',
+					default: this.central.destinations[0] ? this.central.destinations[0].id : 'No Destinations Found',
 				},
 			],
 			callback: ({ options }) => {
-				this.debug('---- in connectSourceToDest action')
-				this.debug('---- destination is ', options.destinations)
-				this.debug('---- source is ', options.source)
-				let source = this.sourceDetails(options.source)
-				this.debug('---- hname is ', source.hname)
-				this.debug('---- format is ', source.format)
+				let source = sourceDetails(options.source)
 				//this.sendCommand('source', 'connect', {
-				//	dest: options.destinations,
+				//	dest: options.destination,
 				//	hname: source.hname,
 				//	format: source.format,
 				//})
@@ -47,8 +75,6 @@ module.exports = {
 				},
 			],
 			callback: ({ options }) => {
-				this.debug('---- in addGenerator action')
-				this.debug('---- generator is ', options.generator)
 				this.sendCommand('gen', 'add_fav_grp', { gname: options.generator })
 			},
 		}
@@ -61,13 +87,10 @@ module.exports = {
 					label: 'Choose Generator to delete',
 					id: 'generator',
 					choices: this.central.generators,
-					default: 'Choose group...',
-					//...this.convertChoices(this.central.sourcegroups),
+					default: this.central.generators[0] ? this.central.generators[0].id : 'No Generators Found',
 				},
 			],
 			callback: ({ options }) => {
-				this.debug('---- in delGenerator action')
-				this.debug('---- generator is ', options.generator)
 				this.sendCommand('gen', 'del_fav_grp', { gname: options.generator })
 			},
 		}
@@ -80,18 +103,17 @@ module.exports = {
 					label: 'Select Generator',
 					id: 'generator',
 					choices: this.central.generators,
+					default: this.central.generators[0] ? this.central.generators[0].id : 'No Generators Found',
 				},
 				{
 					type: 'dropdown',
 					label: 'Select Playlist Source',
 					id: 'playlist',
 					choices: this.central.gen_sources,
+					default: this.central.gen_sources[0] ? this.central.gen_sources[0].id : 'No Playlist Sources Found',
 				},
 			],
 			callback: ({ options }) => {
-				this.debug('---- in addPlaylistToGenerator action')
-				this.debug('---- generator is ', options.generator)
-				this.debug('---- playlist is ', options.playlist)
 				this.sendCommand('gen', 'add_srs', {
 					gname: options.generator,
 					name: options.playlist,
@@ -107,18 +129,17 @@ module.exports = {
 					label: 'Select Generator',
 					id: 'generator',
 					choices: this.central.generators,
+					default: this.central.generators[0] ? this.central.generators[0].id : 'No Generators Found',
 				},
 				{
 					type: 'dropdown',
 					label: 'Select Playlist Source',
 					id: 'playlist',
 					choices: this.central.gen_sources,
+					default: this.central.gen_sources[0] ? this.central.gen_sources[0].id : 'No Playlist Sources Found',
 				},
 			],
 			callback: ({ options }) => {
-				this.debug('---- in addPlaylistToGenerator action')
-				this.debug('---- generator is ', options.generator)
-				this.debug('---- playlist is ', options.playlist)
 				this.sendCommand('gen', 'del_srs', {
 					gname: options.generator,
 					name: options.playlist,
@@ -134,6 +155,7 @@ module.exports = {
 					label: 'Select Generator',
 					id: 'generator',
 					choices: this.central.generators,
+					default: this.central.generators[0] ? this.central.generators[0].id : 'No Generators Found',
 				},
 				{
 					type: 'dropdown',
@@ -146,6 +168,7 @@ module.exports = {
 						{ id: 'skip', label: 'Skip' },
 						{ id: 'loop', label: 'Loop' },
 					],
+					default: 'play',
 				},
 				{
 					type: 'dropdown',
@@ -161,14 +184,10 @@ module.exports = {
 				},
 			],
 			callback: ({ options }) => {
-				this.debug('---- in generatorMediaControl action')
-				this.debug('---- generator is ', options.generator)
-				this.debug('---- control is ', options.control)
 				if (options.control == 'loop') {
 					let loop = options.loop
 					if (options.loop == 'TOGGLE') {
 						let currentState = this.central.generators.find((element) => (element.id = options.generator)).loop
-						this.debug('---- current loop is ', currentState)
 						switch (currentState) {
 							case 'TRUE':
 								loop = 'FALSE'
@@ -177,7 +196,6 @@ module.exports = {
 								loop = 'TRUE'
 								break
 						}
-						this.debug('---- new loop is ', currentState)
 					}
 					this.sendCommand('gen', options.control, {
 						gname: options.generator,
@@ -204,8 +222,6 @@ module.exports = {
 					},
 				],
 				callback: ({ options }) => {
-					this.debug('---- in addSourceGroup action')
-					this.debug('---- group is ', options.group)
 					this.sendCommand('source', 'add_fav_grp', { gname: options.group })
 				},
 			}
@@ -218,13 +234,10 @@ module.exports = {
 						label: 'Delete Source Group',
 						id: 'group',
 						choices: this.central.sourcegroups,
-						default: 'Choose group...',
-						//...this.convertChoices(this.central.sourcegroups),
+						default: this.central.sourcegroups[0] ? this.central.sourcegroups[0].id : 'No Source Groups Found',
 					},
 				],
 				callback: ({ options }) => {
-					this.debug('---- in delSourceGroup action')
-					this.debug('---- group is ', options.group)
 					this.sendCommand('source', 'del_fav_grp', { gname: options.group })
 				},
 			}
@@ -237,23 +250,18 @@ module.exports = {
 						label: 'Select Group',
 						id: 'group',
 						choices: this.central.sourcegroups,
-						//...this.convertChoices(this.central.sourcegroups),
+						default: this.central.sourcegroups[0] ? this.central.sourcegroups[0].id : 'No Source Groups Found',
 					},
 					{
 						type: 'dropdown',
 						label: 'Select Source',
 						id: 'source',
 						choices: this.central.sources,
-						//...this.convertChoices(this.central.sources),
+						default: this.central.sources[0] ? this.central.sources[0].id : 'No Sources Found',
 					},
 				],
 				callback: ({ options }) => {
-					this.debug('---- in addSourceToSourceGroup action')
-					this.debug('---- group is ', options.group)
-					this.debug('---- source is ', options.source)
-					let source = this.sourceDetails(options.source)
-					this.debug('---- hame is ', source.hname)
-					this.debug('---- format is ', source.format)
+					let source = sourceDetails(options.source)
 					this.sendCommand('source', 'add_srs', {
 						gname: options.group,
 						hname: source.hname,
@@ -270,23 +278,18 @@ module.exports = {
 						label: 'Select Group',
 						id: 'group',
 						choices: this.central.sourcegroups,
-						//...this.convertChoices(this.central.sourcegroups),
+						default: this.central.sourcegroups[0] ? this.central.sourcegroups[0].id : 'No Source Groups Found',
 					},
 					{
 						type: 'dropdown',
 						label: 'Select Source',
 						id: 'source',
 						choices: this.central.sources,
-						//...this.convertChoices(this.central.sources),
+						default: this.central.sources[0] ? this.central.sources[0].id : 'No Sources Found',
 					},
 				],
 				callback: ({ options }) => {
-					this.debug('---- in delSourceFromSourceGroup action')
-					this.debug('---- group is ', options.group)
-					this.debug('---- source is ', options.source)
-					let source = this.sourceDetails(options.source)
-					this.debug('---- hame is ', source.hname)
-					this.debug('---- format is ', source.format)
+					let source = sourceDetails(options.source)
 					this.sendCommand('source', 'del_srs', {
 						gname: options.group,
 						hname: source.hname,
@@ -303,23 +306,18 @@ module.exports = {
 						label: 'Select Source',
 						id: 'source',
 						choices: this.central.sources,
-						default: '',
+						default: this.central.sources[0] ? this.central.sources[0].id : 'No Sources Found',
 					},
 					{
 						type: 'dropdown',
 						label: 'Select Destination Group',
 						id: 'group',
 						choices: this.central.destgroups,
-						default: '',
+						default: this.central.destgroups[0] ? this.central.destgroups[0].id : 'No Destinsation Groups Found',
 					},
 				],
 				callback: ({ options }) => {
-					this.debug('---- in connectSourceToDestGroup action')
-					this.debug('---- group is ', options.group)
-					this.debug('---- source is ', options.source)
-					let source = this.sourceDetails(options.source)
-					this.debug('---- hame is ', source.hname)
-					this.debug('---- format is ', source.format)
+					let source = sourceDetails(options.source)
 					this.sendCommand('source', 'connect', {
 						gname: options.group,
 						hname: source.hname,
@@ -338,8 +336,6 @@ module.exports = {
 					},
 				],
 				callback: ({ options }) => {
-					this.debug('---- in addRouter action')
-					this.debug('---- router is ', options.router)
 					this.sendCommand('router', 'add', { name: options.router })
 				},
 			}
@@ -352,11 +348,10 @@ module.exports = {
 						label: 'Choose Router to delete',
 						id: 'router',
 						choices: this.central.routers,
+						default: this.central.routers[0] ? this.central.routers[0].id : 'No Routers Found',
 					},
 				],
 				callback: ({ options }) => {
-					this.debug('---- in delRouter action')
-					this.debug('---- router is ', options.router)
 					this.sendCommand('router', 'del', { name: options.router })
 				},
 			}
@@ -369,18 +364,17 @@ module.exports = {
 						label: 'Select Router',
 						id: 'router',
 						choices: this.central.routers,
+						default: this.central.routers[0] ? this.central.routers[0].id : 'No Routers Found',
 					},
 					{
 						type: 'dropdown',
 						label: 'Select Source Group',
 						id: 'group',
 						choices: this.central.sourcegroups,
+						default: this.central.sourcegroups[0] ? this.central.sourcegroups[0].id : 'No Source Groups Found',
 					},
 				],
 				callback: ({ options }) => {
-					this.debug('---- in linkRouter action')
-					this.debug('---- router is ', options.router)
-					this.debug('---- source group is ', options.group)
 					this.sendCommand('router', 'link', { gname: options.group, name: options.router })
 				},
 			}
@@ -393,12 +387,14 @@ module.exports = {
 						label: 'Select Router',
 						id: 'router',
 						choices: this.central.routers,
+						default: this.central.routers[0] ? this.central.routers[0].id : 'No Routers Found',
 					},
 					{
 						type: 'dropdown',
 						label: 'Select Source',
 						id: 'source',
 						choices: this.central.sources,
+						default: this.central.sources[0] ? this.central.sources[0].id : 'No Sources Found',
 					},
 				],
 				callback: ({ options }) => {
@@ -421,8 +417,6 @@ module.exports = {
 					},
 				],
 				callback: ({ options }) => {
-					this.debug('---- in addRetransmitter action')
-					this.debug('---- retransmitter is ', options.retransmitter)
 					this.sendCommand('retransmtr', 'add', { name: options.retransmitter })
 				},
 			}
@@ -435,12 +429,10 @@ module.exports = {
 						label: 'Choose Retransmitter to delete',
 						id: 'retransmitter',
 						choices: this.central.retransmitters,
-						default: 'Choose retransmitter...',
+						default: this.central.retransmitters[0] ? this.central.retransmitters[0].id : 'No Retransmitters Found',
 					},
 				],
 				callback: ({ options }) => {
-					this.debug('---- in delRetransmitter action')
-					this.debug('---- retransmitter is ', options.retransmitter)
 					this.sendCommand('retransmtr', 'delete', { name: options.retransmitter })
 				},
 			}
@@ -453,12 +445,14 @@ module.exports = {
 						label: 'Select Retransmitter',
 						id: 'retransmitter',
 						choices: this.central.retransmitters,
+						//default: this.central.retransmitters[0] ? this.central.retransmitters[0].id : 'No Retransmitters Found',
 					},
 					{
 						type: 'dropdown',
 						label: 'Select Source for Video',
 						id: 'source',
 						choices: this.central.sources,
+						default: this.central.sources[0] ? this.central.sources[0].id : 'No Sources Found',
 					},
 				],
 				callback: ({ options }) => {
@@ -479,12 +473,14 @@ module.exports = {
 						label: 'Select Retransmitter',
 						id: 'retransmitter',
 						choices: this.central.retransmitters,
+						//default: this.central.retransmitters[0] ? this.central.retransmitters[0].id : 'No Retransmitters Found',
 					},
 					{
 						type: 'dropdown',
 						label: 'Select Source for Audio',
 						id: 'source',
 						choices: this.central.sources,
+						default: this.central.sources[0] ? this.central.sources[0].id : 'No Sources Found',
 					},
 				],
 				callback: ({ options }) => {
@@ -498,55 +494,59 @@ module.exports = {
 			}
 
 			actions['mediaControlRetransmitter'] = {
-				label: 'Retranmitter Media Control',
+				label: 'Retransmitter Media Control',
 				options: [
 					{
 						type: 'dropdown',
 						label: 'Select Retransmitter',
 						id: 'retransmitter',
 						choices: this.central.retransmitters,
+						default: this.central.retransmitters[0] ? this.central.retransmitters[0].id : 'No Retransmitters Found',
 					},
 					{
 						type: 'dropdown',
 						label: 'Select Control',
 						id: 'control',
 						choices: [
+							{ id: 'play', label: 'Play' },
+							{ id: 'stop', label: 'Stop' },
 							{ id: 'astop', label: 'Stop Audio' },
 							{ id: 'vstop', label: 'Stop Video' },
-							{ id: 'stop', label: 'Stop' },
-							{ id: 'play', label: 'Play' },
 						],
+						default: 'play',
 					},
 				],
 				callback: ({ options }) => {
-					this.debug('---- in mediaControlRetransmitter action')
-					this.debug('---- retransmitter is ', options.retransmitter)
-					this.debug('---- control is ', options.control)
 					this.sendCommand('retransmtr', options.control, { name: options.retransmitter })
 				},
 			}
 		}
 
-		return actions
+		return Object.fromEntries(Object.entries(actions).sort(sortByCategory))
 	},
+}
+function sourceDetails(string) {
+	let result = {}
+	let source = string.split('(')
+	result.hname = source[0].trim()
+	result.format = source[1].split(')')[0].trim()
+	return result
+}
 
-	sourceDetails(string) {
-		let result = {}
-		let source = string.split('(')
-		result.hname = source[0].trim()
-		result.format = source[1].split(')')[0].trim()
-		return result
-	},
+function userDefinedGroups(str, array) {
+	let idx = array.findIndex((element) => (element.id = str))
+	array.splice(idx, 1)
+	return array
+}
 
-	convertChoices(choices) {
-		if (choices.length != 0) {
-			return { choices: choices, default: choices[0].id }
-		} else return
-	},
-
-	userDefinedGroups(str, array) {
-		let idx = array.findIndex((element) => (element.id = str))
-		array.splice(idx, 1)
-		return array
-	},
+function sortByCategory(a, b) {
+	categoryA = categories.find((element) => element.actions.includes(a[0])).id
+	categoryB = categories.find((element) => element.actions.includes(b[0])).id
+	if (categoryA < categoryB) {
+		return -1
+	}
+	if (categoryA > categoryB) {
+		return 1
+	}
+	return 0
 }

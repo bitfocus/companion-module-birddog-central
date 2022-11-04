@@ -19,8 +19,8 @@ exports.updateVariables = function () {
 	if (this.central.access < 0) {
 		this.setVariable('access', 'Lite')
 	} else if (this.central.access > 0) {
-		this.setVariable('access', 'Pro')
-	} else {
 		this.setVariable('access', 'Enterprise')
+	} else {
+		this.setVariable('access', 'Pro')
 	}
 }
