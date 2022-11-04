@@ -10,8 +10,6 @@ exports.updateVariableDefinitions = function () {
 	this.setVariableDefinitions(variables)
 }
 
-// remove this comment
-
 // #########################
 // #### Update Variables ####
 // #########################

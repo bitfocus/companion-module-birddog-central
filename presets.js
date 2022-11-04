@@ -5,7 +5,6 @@ exports.getPresets = function () {
 	const ColorRed = this.rgb(255, 0, 0) // Red
 	const ColorGreen = this.rgb(0, 255, 0) // Green
 	const ColorOrange = this.rgb(255, 102, 0) // Orange
-	// remove this comment
 
 	// Common Presets
 
