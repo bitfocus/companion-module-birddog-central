@@ -360,6 +360,7 @@ class instance extends instance_skel {
 		this.sendCommand('source', 'list')
 		this.sendCommand('gen', 'list')
 		this.sendCommand('gen', 'srs_list')
+
 		if (this.central.access >= 0) {
 			this.sendCommand('source', 'fav_gnames')
 			this.sendCommand('source', 'fav_glist')
@@ -492,7 +493,6 @@ class instance extends instance_skel {
 		// Compare against what is stored
 		// Return true if changed
 		// For each router, query router
-
 		let names = []
 		data.routers.forEach((element) => {
 			names.push(element.name)
