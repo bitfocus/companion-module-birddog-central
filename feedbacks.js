@@ -87,7 +87,7 @@ exports.initFeedbacks = function () {
 				},
 			],
 			callback: ({ options }) => {
-				return (this.central.routers.find((router) => router.id == options.router).name = options.source)
+				return this.central.routers.find((router) => router.id == options.router).name == options.source
 			},
 		}
 
