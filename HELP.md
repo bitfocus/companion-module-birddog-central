@@ -1,4 +1,4 @@
-## BirdDog PTZ
+## BirdDog Central 2.0
 
 This module allows you to control [BirdDog](https://birddog.tv/central-overview/) Central 2.0 software.
 
@@ -20,6 +20,11 @@ This module allows you to control [BirdDog](https://birddog.tv/central-overview/
 - Feedbacks
 
   - Generator Media Status
+  - Source Connected to Router
+  - Retransmitter Audio Source
+  - Retransmitter Audio Status
+  - Retransmitter Video Source
+  - Retransmitter Video Status
 
 - Variables
   - Software version
