@@ -361,17 +361,17 @@ module.exports = {
 				options: [
 					{
 						type: 'dropdown',
-						label: 'Select Router',
-						id: 'router',
-						choices: this.central.routers,
-						default: this.central.routers[0] ? this.central.routers[0].id : 'No Routers Found',
-					},
-					{
-						type: 'dropdown',
 						label: 'Select Source Group',
 						id: 'group',
 						choices: this.central.sourcegroups,
 						default: this.central.sourcegroups[0] ? this.central.sourcegroups[0].id : 'No Source Groups Found',
+					},
+					{
+						type: 'dropdown',
+						label: 'Select Router',
+						id: 'router',
+						choices: this.central.routers,
+						default: this.central.routers[0] ? this.central.routers[0].id : 'No Routers Found',
 					},
 				],
 				callback: ({ options }) => {
@@ -445,7 +445,7 @@ module.exports = {
 						label: 'Select Retransmitter',
 						id: 'retransmitter',
 						choices: this.central.retransmitters,
-						//default: this.central.retransmitters[0] ? this.central.retransmitters[0].id : 'No Retransmitters Found',
+						default: this.central.retransmitters[0] ? this.central.retransmitters[0].id : 'No Retransmitters Found',
 					},
 					{
 						type: 'dropdown',
@@ -473,7 +473,7 @@ module.exports = {
 						label: 'Select Retransmitter',
 						id: 'retransmitter',
 						choices: this.central.retransmitters,
-						//default: this.central.retransmitters[0] ? this.central.retransmitters[0].id : 'No Retransmitters Found',
+						default: this.central.retransmitters[0] ? this.central.retransmitters[0].id : 'No Retransmitters Found',
 					},
 					{
 						type: 'dropdown',
