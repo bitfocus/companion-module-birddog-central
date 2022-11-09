@@ -358,13 +358,12 @@ class instance extends instance_skel {
 	// Get Central Status
 	pollCentralStatus() {
 		this.sendCommand('source', 'list')
-		this.sendCommand('gen', 'list')
+		this.sendCommand('dest', 'list')
 		this.sendCommand('gen', 'srs_list')
 
 		if (this.central.access >= 0) {
 			this.sendCommand('source', 'fav_gnames')
 			this.sendCommand('source', 'fav_glist')
-			this.sendCommand('dest', 'list')
 			this.sendCommand('dest', 'fav_gnames')
 			this.sendCommand('dest', 'fav_glist')
 			this.sendCommand('router', 'list')
@@ -374,7 +373,6 @@ class instance extends instance_skel {
 		}
 		this.debug('---- Central details: ', this.central)
 	}
-
 	// Functions
 
 	listAllSources(data) {

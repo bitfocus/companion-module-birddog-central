@@ -51,17 +51,24 @@ module.exports = {
 					type: 'dropdown',
 					label: 'Select Destination',
 					id: 'destination',
+					multiple: true,
 					choices: this.central.destinations,
 					default: this.central.destinations[0] ? this.central.destinations[0].id : 'No Destinations Found',
 				},
 			],
 			callback: ({ options }) => {
-				let source = sourceDetails(options.source)
-				//this.sendCommand('source', 'connect', {
-				//	dest: options.destination,
-				//	hname: source.hname,
-				//	format: source.format,
-				//})
+				console.log('-- in connectSource callback')
+				console.log('--- options.destination', options.destination)
+				let destArray = []
+				let source = this.central.sources.find((element) => element.id == options.source)
+				options.destination.forEach((dest) => {
+					destArray.push(this.central.destinations.find((element) => element.id == dest).ip)
+				})
+				this.sendCommand('source', 'connect', {
+					hname: source.hname,
+					format: source.format,
+					dest: JSON.stringify({ destinations: destArray }),
+				})
 			},
 		}
 
@@ -187,7 +194,7 @@ module.exports = {
 				if (options.control == 'loop') {
 					let loop = options.loop
 					if (options.loop == 'TOGGLE') {
-						let currentState = this.central.generators.find((element) => (element.id = options.generator)).loop
+						let currentState = this.central.generators.find((element) => element.id == options.generator).loop
 						switch (currentState) {
 							case 'TRUE':
 								loop = 'FALSE'
@@ -261,7 +268,7 @@ module.exports = {
 					},
 				],
 				callback: ({ options }) => {
-					let source = sourceDetails(options.source)
+					let source = this.central.sources.find((element) => element.id == options.source)
 					this.sendCommand('source', 'add_srs', {
 						gname: options.group,
 						hname: source.hname,
@@ -289,7 +296,7 @@ module.exports = {
 					},
 				],
 				callback: ({ options }) => {
-					let source = sourceDetails(options.source)
+					let source = this.central.sources.find((element) => element.id == options.source)
 					this.sendCommand('source', 'del_srs', {
 						gname: options.group,
 						hname: source.hname,
@@ -317,7 +324,7 @@ module.exports = {
 					},
 				],
 				callback: ({ options }) => {
-					let source = sourceDetails(options.source)
+					let source = this.central.sources.find((element) => element.id == options.source)
 					this.sendCommand('source', 'connect', {
 						gname: options.group,
 						hname: source.hname,
@@ -403,6 +410,39 @@ module.exports = {
 						hname: source.host_name,
 						format: source.format,
 						name: options.router,
+					})
+				},
+			}
+
+			actions['connectRouterToDest'] = {
+				label: 'Connect Router to Destination',
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Select Router',
+						id: 'router',
+						choices: this.central.routers,
+						default: this.central.routers[0] ? this.central.routers[0].id : 'No Routers Found',
+					},
+					{
+						type: 'dropdown',
+						label: 'Select Destination',
+						id: 'destination',
+						multiple: true,
+						choices: this.central.destinations,
+						default: this.central.destinations[0] ? this.central.destinations[0].id : 'No Destinations Found',
+					},
+				],
+				callback: ({ options }) => {
+					console.log('-- in connectRouterToDest callback')
+					console.log('--- options.destination', options.destination)
+					let destArray = []
+					options.destination.forEach((dest) => {
+						destArray.push(this.central.destinations.find((element) => element.id == dest).ip)
+					})
+					this.sendCommand('source', 'connect', {
+						name: options.router,
+						dest: JSON.stringify({ destinations: destArray }),
 					})
 				},
 			}
@@ -524,13 +564,6 @@ module.exports = {
 
 		return Object.fromEntries(Object.entries(actions).sort(sortByCategory))
 	},
-}
-function sourceDetails(string) {
-	let result = {}
-	let source = string.split('(')
-	result.hname = source[0].trim()
-	result.format = source[1].split(')')[0].trim()
-	return result
 }
 
 function sortByCategory(a, b) {
