@@ -238,7 +238,7 @@ class instance extends instance_skel {
 			case 'gen':
 				switch (subcmd) {
 					case 'list':
-						changed.generator = this.listGenerators(data)
+						changed.generators = this.listGenerators(data)
 						break
 					case 'glist':
 						break
@@ -267,6 +267,7 @@ class instance extends instance_skel {
 					case 'add':
 					case 'delete':
 						changed.retransmitters = this.listRetransmitters(data)
+						console.log('retransmitters', changed.retransmitters)
 						break
 					case 'info':
 					case 'vconnect':
@@ -302,7 +303,7 @@ class instance extends instance_skel {
 			changed.destInfo ||
 			changed.routers ||
 			changed.routerInfo ||
-			changed.generator ||
+			changed.generators ||
 			changed.genSources ||
 			changed.retransmitters
 		) {
@@ -310,10 +311,26 @@ class instance extends instance_skel {
 			this.actions()
 			this.initFeedbacks()
 			this.initPresets()
+			this.updateVariables()
+
+			if (changed.routers || changed.generators || changed.retransmitters) {
+				// something has chnaged in generators/routers/retransmitters, so need to re-intialise variables
+				console.log(
+					'routers',
+					changed.routers,
+					'generators',
+					changed.generators,
+					'retransmitters',
+					changed.retransmitters
+				)
+				this.initVariables()
+				this.updateVariables()
+			}
 		}
 		if (changed.generatorInfo || changed.routerConnect || changed.retransmittersInfo) {
-			// The status of something has changed, so need to check feedbacks
+			// The status of something has changed, so need to check feedbacks and update variabkes
 			this.checkFeedbacks()
+			this.updateVariables()
 		}
 		if (changed.info || changed.version) {
 			// Only update variables
@@ -586,10 +603,14 @@ class instance extends instance_skel {
 		data.retransmitters.forEach((element) => {
 			names.push(element)
 		})
-		this.central.retransmitters = this.groupList(names)
+		let different = this.isDifferent(this.central.retransmitters, this.groupList(names))
+		if (different) {
+			this.central.retransmitters = this.groupList(names)
+		}
 		names.forEach((element) => {
 			this.sendCommand('retransmtr', 'info', { name: element })
 		})
+		return different
 	}
 
 	retransmitterInfo(data) {
