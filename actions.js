@@ -5,12 +5,8 @@ const categories = [
 		category: 'Source',
 		actions: ['addSourceGroup', 'delSourceGroup', 'addSourceToSourceGroup', 'delSourceFromSourceGroup'],
 	},
-	{ id: 2, category: 'Router', actions: ['addRouter', 'delRouter', 'linkRouter', 'sconnectRouter', 'dconnectRouter'] },
-	{
-		id: 3,
-		category: 'Destination',
-		actions: ['addDestGroup', 'delDestGroup', 'addDestToDestGroup', 'delDestFromDestGroup'],
-	},
+	{ id: 2, category: 'Router', actions: ['addRouter', 'delRouter', 'linkRouter', 'sconnectRouter'] },
+	{ id: 3, category: 'Destination', actions: [] },
 	{
 		id: 4,
 		category: 'Generator',
@@ -337,92 +333,6 @@ module.exports = {
 				},
 			}
 
-			actions['addDestGroup'] = {
-				label: 'Add Destination Group',
-				options: [
-					{
-						type: 'textinput',
-						label: 'New Destination Group',
-						id: 'group',
-					},
-				],
-				callback: ({ options }) => {
-					this.sendCommand('dest', 'add_fav_grp', { gname: options.group })
-				},
-			}
-
-			actions['delDestGroup'] = {
-				label: 'Delete Destination Group',
-				options: [
-					{
-						type: 'dropdown',
-						label: 'Delete Destination Group',
-						id: 'group',
-						choices: this.central.destgroups,
-						default: this.central.destgroups[0] ? this.central.destgroups[0].id : 'No Destination Groups Found',
-					},
-				],
-				callback: ({ options }) => {
-					this.sendCommand('dest', 'del_fav_grp', { gname: options.group })
-				},
-			}
-
-			actions['addDestToDestGroup'] = {
-				label: 'Add Destination to Destination Group',
-				options: [
-					{
-						type: 'dropdown',
-						label: 'Select Group',
-						id: 'group',
-						choices: this.central.destgroups,
-						default: this.central.destgroups[0] ? this.central.destgroups[0].id : 'No Destination Groups Found',
-					},
-					{
-						type: 'dropdown',
-						label: 'Select Destination',
-						id: 'dest',
-						choices: this.central.destinations,
-						default: this.central.destinations[0] ? this.central.destinations[0].id : 'No Destinations Found',
-					},
-				],
-				callback: ({ options }) => {
-					let dest = this.central.destinations.find((element) => element.id == options.dest)
-					this.sendCommand('dest', 'add_srs', {
-						gname: options.group,
-						hname: dest.hname,
-						format: dest.format,
-					})
-				},
-			}
-
-			actions['delDestFromDestGroup'] = {
-				label: 'Delete Destination from Destination Group',
-				options: [
-					{
-						type: 'dropdown',
-						label: 'Select Group',
-						id: 'group',
-						choices: this.central.destgroups,
-						default: this.central.destgroups[0] ? this.central.destgroups[0].id : 'No Destination Groups Found',
-					},
-					{
-						type: 'dropdown',
-						label: 'Select Destination',
-						id: 'dest',
-						choices: this.central.destinations,
-						default: this.central.destinations[0] ? this.central.destinations[0].id : 'No Destinations Found',
-					},
-				],
-				callback: ({ options }) => {
-					let dest = this.central.destinations.find((element) => element.id == options.dest)
-					this.sendCommand('dest', 'del_srs', {
-						gname: options.group,
-						hname: dest.hname,
-						format: dest.format,
-					})
-				},
-			}
-
 			actions['addRouter'] = {
 				label: 'Add Router',
 				options: [
@@ -504,7 +414,7 @@ module.exports = {
 				},
 			}
 
-			actions['dconnectRouter'] = {
+			actions['connectRouterToDest'] = {
 				label: 'Connect Router to Destination',
 				options: [
 					{
@@ -530,7 +440,7 @@ module.exports = {
 					options.destination.forEach((dest) => {
 						destArray.push(this.central.destinations.find((element) => element.id == dest).ip)
 					})
-					this.sendCommand('router', 'dconnect', {
+					this.sendCommand('source', 'connect', {
 						name: options.router,
 						dest: JSON.stringify({ destinations: destArray }),
 					})
