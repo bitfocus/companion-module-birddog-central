@@ -1,14 +1,17 @@
-exports.getPresets = function () {
+import { combineRgb } from '@companion-module/base'
+
+export function getPresets() {
 	let presets = []
-	const ColorWhite = this.rgb(255, 255, 255) // White
-	const ColorBlack = this.rgb(0, 0, 0) // Black
-	const ColorRed = this.rgb(255, 0, 0) // Red
-	const ColorGreen = this.rgb(0, 255, 0) // Green
-	const ColorOrange = this.rgb(255, 102, 0) // Orange
+	const ColorWhite = combineRgb(255, 255, 255) // White
+	const ColorBlack = combineRgb(0, 0, 0) // Black
+	const ColorRed = combineRgb(255, 0, 0) // Red
+	const ColorGreen = combineRgb(0, 255, 0) // Green
+	const ColorOrange = combineRgb(255, 102, 0) // Orange
 
 	// Common Presets
 
 	presets.push({
+type: 'button',
 		category: 'Connect',
 		label: 'Connect Source to Destination',
 		bank: {

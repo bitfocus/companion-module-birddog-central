@@ -35,14 +35,13 @@ const categories = [
 	},
 ]
 
-module.exports = {
-	getActions() {
+export function getActions() {
 		let actions = {}
 
 		// Common actions
 
 		actions['connectSourceToDest'] = {
-			label: 'Connect Source to Destination',
+			name: 'Connect Source to Destination',
 			options: [
 				{
 					type: 'dropdown',
@@ -77,7 +76,7 @@ module.exports = {
 		}
 
 		actions['addGenerator'] = {
-			label: 'Add Generator',
+			name: 'Add Generator',
 			options: [
 				{
 					type: 'textinput',
@@ -91,7 +90,7 @@ module.exports = {
 		}
 
 		actions['delGenerator'] = {
-			label: 'Delete Generator',
+			name: 'Delete Generator',
 			options: [
 				{
 					type: 'dropdown',
@@ -107,7 +106,7 @@ module.exports = {
 		}
 
 		actions['addPlaylistToGenerator'] = {
-			label: 'Add Playlist Source to Generator',
+			name: 'Add Playlist Source to Generator',
 			options: [
 				{
 					type: 'dropdown',
@@ -133,7 +132,7 @@ module.exports = {
 		}
 
 		actions['delPlaylistFromGenerator'] = {
-			label: 'Delete Playlist Source from Generator',
+			name: 'Delete Playlist Source from Generator',
 			options: [
 				{
 					type: 'dropdown',
@@ -159,7 +158,7 @@ module.exports = {
 		}
 
 		actions['generatorMediaControl'] = {
-			label: 'Generator Media Control',
+			name: 'Generator Media Control',
 			options: [
 				{
 					type: 'dropdown',
@@ -224,7 +223,7 @@ module.exports = {
 
 		if (this.central.access >= 0) {
 			actions['addSourceGroup'] = {
-				label: 'Add Source Group',
+				name: 'Add Source Group',
 				options: [
 					{
 						type: 'textinput',
@@ -238,7 +237,7 @@ module.exports = {
 			}
 
 			actions['delSourceGroup'] = {
-				label: 'Delete Source Group',
+				name: 'Delete Source Group',
 				options: [
 					{
 						type: 'dropdown',
@@ -254,7 +253,7 @@ module.exports = {
 			}
 
 			actions['addSourceToSourceGroup'] = {
-				label: 'Add Source to Source Group',
+				name: 'Add Source to Source Group',
 				options: [
 					{
 						type: 'dropdown',
@@ -282,7 +281,7 @@ module.exports = {
 			}
 
 			actions['delSourceFromSourceGroup'] = {
-				label: 'Delete Source from Source Group',
+				name: 'Delete Source from Source Group',
 				options: [
 					{
 						type: 'dropdown',
@@ -310,7 +309,7 @@ module.exports = {
 			}
 
 			actions['connectSourceToDestGroup'] = {
-				label: 'Connect Source to Destination Group',
+				name: 'Connect Source to Destination Group',
 				options: [
 					{
 						type: 'dropdown',
@@ -338,7 +337,7 @@ module.exports = {
 			}
 
 			actions['addDestGroup'] = {
-				label: 'Add Destination Group',
+				name: 'Add Destination Group',
 				options: [
 					{
 						type: 'textinput',
@@ -352,7 +351,7 @@ module.exports = {
 			}
 
 			actions['delDestGroup'] = {
-				label: 'Delete Destination Group',
+				name: 'Delete Destination Group',
 				options: [
 					{
 						type: 'dropdown',
@@ -368,7 +367,7 @@ module.exports = {
 			}
 
 			actions['addDestToDestGroup'] = {
-				label: 'Add Destination to Destination Group',
+				name: 'Add Destination to Destination Group',
 				options: [
 					{
 						type: 'dropdown',
@@ -396,7 +395,7 @@ module.exports = {
 			}
 
 			actions['delDestFromDestGroup'] = {
-				label: 'Delete Destination from Destination Group',
+				name: 'Delete Destination from Destination Group',
 				options: [
 					{
 						type: 'dropdown',
@@ -424,7 +423,7 @@ module.exports = {
 			}
 
 			actions['addRouter'] = {
-				label: 'Add Router',
+				name: 'Add Router',
 				options: [
 					{
 						type: 'textinput',
@@ -438,7 +437,7 @@ module.exports = {
 			}
 
 			actions['delRouter'] = {
-				label: 'Delete Router',
+				name: 'Delete Router',
 				options: [
 					{
 						type: 'dropdown',
@@ -454,7 +453,7 @@ module.exports = {
 			}
 
 			actions['linkRouter'] = {
-				label: 'Link Source Group to Router',
+				name: 'Link Source Group to Router',
 				options: [
 					{
 						type: 'dropdown',
@@ -477,7 +476,7 @@ module.exports = {
 			}
 
 			actions['sconnectRouter'] = {
-				label: 'Connect Source to Router',
+				name: 'Connect Source to Router',
 				options: [
 					{
 						type: 'dropdown',
@@ -539,7 +538,7 @@ module.exports = {
 			}
 
 			actions['addRetransmitter'] = {
-				label: 'Add Retransmitter',
+				name: 'Add Retransmitter',
 				options: [
 					{
 						type: 'textinput',
@@ -553,7 +552,7 @@ module.exports = {
 			}
 
 			actions['delRetransmitter'] = {
-				label: 'Delete Retransmitter',
+				name: 'Delete Retransmitter',
 				options: [
 					{
 						type: 'dropdown',
@@ -569,7 +568,7 @@ module.exports = {
 			}
 
 			actions['vconnectRetransmitter'] = {
-				label: 'Connect Video Source to Retransmitter',
+				name: 'Connect Video Source to Retransmitter',
 				options: [
 					{
 						type: 'dropdown',
@@ -597,7 +596,7 @@ module.exports = {
 			}
 
 			actions['aconnectRetransmitter'] = {
-				label: 'Connect Audio Source to Retransmitter',
+				name: 'Connect Audio Source to Retransmitter',
 				options: [
 					{
 						type: 'dropdown',
@@ -625,7 +624,7 @@ module.exports = {
 			}
 
 			actions['mediaControlRetransmitter'] = {
-				label: 'Retransmitter Media Control',
+				name: 'Retransmitter Media Control',
 				options: [
 					{
 						type: 'dropdown',
@@ -654,7 +653,7 @@ module.exports = {
 		}
 
 		return Object.fromEntries(Object.entries(actions).sort(sortByCategory))
-	},
+	
 }
 
 function sortByCategory(a, b) {
