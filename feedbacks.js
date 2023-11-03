@@ -11,9 +11,9 @@ export function getFeedbacks() {
 
 	feedbacks.generatorMediaStatus = {
 		type: 'boolean',
-		label: 'Generator Media Status',
+		name: 'Generator Media Status',
 		description: 'If the selected generator has the selected status, change the style of the button',
-		style: {
+		defaultStyle: {
 			color: ColorBlack,
 			bgcolor: ColorGreen,
 		},
@@ -66,9 +66,9 @@ export function getFeedbacks() {
 	if (this.central.access >= 0) {
 		feedbacks.sourceConnectedToRouter = {
 			type: 'boolean',
-			label: 'Source Connected to Router',
+			name: 'Source Connected to Router',
 			description: 'If the selected source is connected to the selected router, change the style of the button',
-			style: {
+			defaultStyle: {
 				color: ColorBlack,
 				bgcolor: ColorGreen,
 			},
@@ -95,9 +95,9 @@ export function getFeedbacks() {
 
 		feedbacks.retransmitterAudioSource = {
 			type: 'boolean',
-			label: 'Retransmitter Audio Source',
+			name: 'Retransmitter Audio Source',
 			description: 'If the selected retransmitter has the selected Audio source, change the style of the button',
-			style: {
+			defaultStyle: {
 				color: ColorBlack,
 				bgcolor: ColorGreen,
 			},
@@ -130,9 +130,9 @@ export function getFeedbacks() {
 		}
 		feedbacks.retransmitterAudioStatus = {
 			type: 'boolean',
-			label: 'Retransmitter Audio Status',
+			name: 'Retransmitter Audio Status',
 			description: 'If the selected retransmitter has the selected Audio status, change the style of the button',
-			style: {
+			defaultStyle: {
 				color: ColorBlack,
 				bgcolor: ColorGreen,
 			},
@@ -165,9 +165,9 @@ export function getFeedbacks() {
 
 		feedbacks.retransmitterVideoSource = {
 			type: 'boolean',
-			label: 'Retransmitter Video Source',
+			name: 'Retransmitter Video Source',
 			description: 'If the selected retransmitter has the selected Video source, change the style of the button',
-			style: {
+			defaultStyle: {
 				color: ColorBlack,
 				bgcolor: ColorGreen,
 			},
@@ -200,9 +200,9 @@ export function getFeedbacks() {
 		}
 		feedbacks.retransmitterVideoStatus = {
 			type: 'boolean',
-			label: 'Retransmitter Video status',
+			name: 'Retransmitter Video status',
 			description: 'If the selected retransmitter has the selected Video status, change the style of the button',
-			style: {
+			defaultStyle: {
 				color: ColorBlack,
 				bgcolor: ColorGreen,
 			},
@@ -233,8 +233,6 @@ export function getFeedbacks() {
 			},
 		}
 	}
-
-	this.setFeedbackDefinitions(feedbacks)
 
 	return feedbacks
 }

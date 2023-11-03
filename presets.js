@@ -1,7 +1,7 @@
 import { combineRgb } from '@companion-module/base'
 
 export function getPresets() {
-	let presets = []
+	let presets = {}
 	const ColorWhite = combineRgb(255, 255, 255) // White
 	const ColorBlack = combineRgb(0, 0, 0) // Black
 	const ColorRed = combineRgb(255, 0, 0) // Red
@@ -10,8 +10,8 @@ export function getPresets() {
 
 	// Common Presets
 
-	presets.push({
-type: 'button',
+	presets[`srcToDest`] = {
+		type: 'button',
 		category: 'Connect',
 		label: 'Connect Source to Destination',
 		bank: {
@@ -30,9 +30,10 @@ type: 'button',
 				},
 			},
 		],
-	})
+	}
 
-	presets.push({
+	presets[`addGenerator`] = {
+		type: 'button',
 		category: 'Generator',
 		label: 'Add Generator',
 		bank: {
@@ -47,9 +48,10 @@ type: 'button',
 				action: 'addGenerator',
 			},
 		],
-	})
+	}
 
-	presets.push({
+	presets[`deleteGenerator`] = {
+		type: 'button',
 		category: 'Generator',
 		label: 'Delete Generator',
 		bank: {
@@ -67,9 +69,10 @@ type: 'button',
 				},
 			},
 		],
-	})
+	}
 
-	presets.push({
+	presets[`playlistToGenerator`] = {
+		type: 'button',
 		category: 'Generator',
 		label: 'Add Playlist Source to Generator',
 		bank: {
@@ -88,9 +91,10 @@ type: 'button',
 				},
 			},
 		],
-	})
+	}
 
-	presets.push({
+	presets[`deletePlaylisteToGenerator`] = {
+		type: 'button',
 		category: 'Generator',
 		label: 'Delete Playlist Source from Generator',
 		bank: {
@@ -109,9 +113,10 @@ type: 'button',
 				},
 			},
 		],
-	})
+	}
 
-	presets.push({
+	presets[`playPlatListGenerator`] = {
+		type: 'button',
 		category: 'Generator',
 		label: 'Play Playlist',
 		bank: {
@@ -140,9 +145,10 @@ type: 'button',
 				},
 			},
 		],
-	})
+	}
 
-	presets.push({
+	presets[`stopPlaylistGenerator`] = {
+		type: 'button',
 		category: 'Generator',
 		label: 'Stop Playlist',
 		bank: {
@@ -171,9 +177,10 @@ type: 'button',
 				},
 			},
 		],
-	})
+	}
 
-	presets.push({
+	presets[`pausePlaylistGenerator`] = {
+		type: 'button',
 		category: 'Generator',
 		label: 'Pause Playlist',
 		bank: {
@@ -202,9 +209,10 @@ type: 'button',
 				},
 			},
 		],
-	})
+	}
 
-	presets.push({
+	presets[`nextPlaylistGenerator`] = {
+		type: 'button',
 		category: 'Generator',
 		label: 'Next in Playlist',
 		bank: {
@@ -223,9 +231,10 @@ type: 'button',
 				},
 			},
 		],
-	})
+	}
 
-	presets.push({
+	presets[`looptPlaylistGenerator`] = {
+		type: 'button',
 		category: 'Generator',
 		label: 'Loop Playlist',
 		bank: {
@@ -255,10 +264,11 @@ type: 'button',
 				},
 			},
 		],
-	})
+	}
 
 	if (this.central.access >= 0) {
-		presets.push({
+		presets[`addSourceGroup`] = {
+			type: 'button',
 			category: 'Source',
 			label: 'Add Source Group',
 			bank: {
@@ -273,9 +283,10 @@ type: 'button',
 					action: 'addSourceGroup',
 				},
 			],
-		})
+		}
 
-		presets.push({
+		presets[`deleteSourceGroup`] = {
+			type: 'button',
 			category: 'Source',
 			label: 'Delete Source Group',
 			bank: {
@@ -293,9 +304,10 @@ type: 'button',
 					},
 				},
 			],
-		})
+		}
 
-		presets.push({
+		presets[`addSourceToGroup`] = {
+			type: 'button',
 			category: 'Source',
 			label: 'Add Source to Source Group',
 			bank: {
@@ -314,9 +326,10 @@ type: 'button',
 					},
 				},
 			],
-		})
+		}
 
-		presets.push({
+		presets[`deleteSourceFromGroup`] = {
+			type: 'button',
 			category: 'Source',
 			label: 'Delete Source from Source Group',
 			bank: {
@@ -335,9 +348,10 @@ type: 'button',
 					},
 				},
 			],
-		})
+		}
 
-		presets.push({
+		presets[`connectSourcetoDestGroup`] = {
+			type: 'button',
 			category: 'Connect',
 			label: 'Connect Source to Destination Group',
 			bank: {
@@ -356,9 +370,10 @@ type: 'button',
 					},
 				},
 			],
-		})
+		}
 
-		presets.push({
+		presets[`addRouter`] = {
+			type: 'button',
 			category: 'Router',
 			label: 'Add Router',
 			bank: {
@@ -376,9 +391,10 @@ type: 'button',
 					},
 				},
 			],
-		})
+		}
 
-		presets.push({
+		presets[`deleteRouter`] = {
+			type: 'button',
 			category: 'Router',
 			label: 'Delete Router',
 			bank: {
@@ -396,9 +412,10 @@ type: 'button',
 					},
 				},
 			],
-		})
+		}
 
-		presets.push({
+		presets[`linkSourceGroupToRouter`] = {
+			type: 'button',
 			category: 'Router',
 			label: 'Link Source Group to Router',
 			bank: {
@@ -417,9 +434,10 @@ type: 'button',
 					},
 				},
 			],
-		})
+		}
 
-		presets.push({
+		presets[`connectSourceToRouter`] = {
+			type: 'button',
 			category: 'Router',
 			label: 'Connect Source to Router',
 			bank: {
@@ -438,9 +456,10 @@ type: 'button',
 					},
 				},
 			],
-		})
+		}
 
-		presets.push({
+		presets[`addRetransmitter`] = {
+			type: 'button',
 			category: 'Retransmitter',
 			label: 'Add Retransmitter',
 			bank: {
@@ -455,9 +474,10 @@ type: 'button',
 					action: 'addRetransmitter',
 				},
 			],
-		})
+		}
 
-		presets.push({
+		presets[`deleteRetransmitter`] = {
+			type: 'button',
 			category: 'Retransmitter',
 			label: 'Delete Retransmitter',
 			bank: {
@@ -475,9 +495,10 @@ type: 'button',
 					},
 				},
 			],
-		})
+		}
 
-		presets.push({
+		presets[`connectAudioRetransmitter`] = {
+			type: 'button',
 			category: 'Retransmitter',
 			label: 'Connect Audio Source to Retransmitter',
 			bank: {
@@ -496,9 +517,10 @@ type: 'button',
 					},
 				},
 			],
-		})
+		}
 
-		presets.push({
+		presets[`connectVideoRetransmitter`] = {
+			type: 'button',
 			category: 'Retransmitter',
 			label: 'Connect Video Source to Retransmitter',
 			bank: {
@@ -517,9 +539,10 @@ type: 'button',
 					},
 				},
 			],
-		})
+		}
 
-		presets.push({
+		presets[`playRetransmitter`] = {
+			type: 'button',
 			category: 'Retransmitter',
 			label: 'Play Retransmitter',
 			bank: {
@@ -538,9 +561,10 @@ type: 'button',
 					},
 				},
 			],
-		})
+		}
 
-		presets.push({
+		presets[`stopRetransmitter`] = {
+			type: 'button',
 			category: 'Retransmitter',
 			label: 'Stop Retransmitter',
 			bank: {
@@ -559,9 +583,10 @@ type: 'button',
 					},
 				},
 			],
-		})
+		}
 
-		presets.push({
+		presets[`stopAudioRetransmitter`] = {
+			type: 'button',
 			category: 'Retransmitter',
 			label: 'Stop Audio Retransmitter',
 			bank: {
@@ -580,9 +605,10 @@ type: 'button',
 					},
 				},
 			],
-		})
+		}
 
-		presets.push({
+		presets[`stopVideoRetransmitter`] = {
+			type: 'button',
 			category: 'Retransmitter',
 			label: 'Stop Video Retransmitter',
 			bank: {
@@ -601,7 +627,7 @@ type: 'button',
 					},
 				},
 			],
-		})
+		}
 	}
 
 	return presets

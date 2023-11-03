@@ -18,6 +18,7 @@ class BirdDogCentralInstance extends InstanceBase {
 			pollCentralConfig: null, // ID of setInterval for Central polling
 			pollCentralStatus: null, // ID of setInterval for Camera Status polling
 		}
+		this.updateVariables = updateVariables
 
 		this.central = {}
 		this.central.sources = []
@@ -60,13 +61,10 @@ class BirdDogCentralInstance extends InstanceBase {
 		this.updateStatus(InstanceStatus.Connecting)
 
 		if (this.config.host !== undefined) {
-			this.log('debug','----Host details:- ' + this.config.host)
+			this.log('debug', '----Host details:- ' + this.config.host)
 			this.init()
 		} else {
-			this.updateStatus(
-				'error',
-				'Invalid IP address'
-			)
+			this.updateStatus('error', 'Invalid IP address')
 		}
 	}
 
@@ -98,7 +96,8 @@ class BirdDogCentralInstance extends InstanceBase {
 	}
 
 	initVariables() {
-		updateVariableDefinitions.bind(this)()
+		const variables = updateVariableDefinitions.bind(this)()
+		this.setVariableDefinitions(variables)
 	}
 
 	sendCommand(cmd, subcmd, parameters) {
@@ -131,7 +130,7 @@ class BirdDogCentralInstance extends InstanceBase {
 				this.processData(cmd, subcmd, json)
 			})
 			.catch((err) => {
-				this.log('debug',err)
+				this.log('debug', err)
 				let errorText = String(err)
 				if (
 					errorText.match('ECONNREFUSED') ||
@@ -284,7 +283,7 @@ class BirdDogCentralInstance extends InstanceBase {
 			changed.retransmitters
 		) {
 			// Something has changed, so need to re-initialise actions/feedbacks/presets
-			this.actions()
+			this.initActions()
 			this.initFeedbacks()
 			this.initPresets()
 			this.updateVariables()
@@ -364,7 +363,7 @@ class BirdDogCentralInstance extends InstanceBase {
 			this.sendCommand('gen', 'srs_list')
 			this.sendCommand('retransmtr', 'list')
 		}
-		this.log('debug','---- Central details: ', this.central)
+		this.log('debug', '---- Central details: ', this.central)
 	}
 	// Functions
 

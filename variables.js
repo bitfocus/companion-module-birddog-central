@@ -10,10 +10,12 @@ export function updateVariableDefinitions() {
 	if (this.central.access >= 0) {
 		if (this.central.routers.length > 0) {
 			this.central.routers.forEach((element, index) => {
-				variables.push({ name: 'Router ' + element.label, variableId: 'router_' + element.label })
+				let name = element.label
+				name = name.replace(/[\W]/gi, '_')
+				variables.push({ name: 'Router ' + name, variableId: 'router_' + name })
 				variables.push({
-					name: 'Router ' + element.label + ' current output',
-					variableId: 'router_' + element.label + '_output',
+					name: 'Router ' + name + ' current output',
+					variableId: 'router_' + name + '_output',
 				})
 			})
 		}
@@ -21,7 +23,10 @@ export function updateVariableDefinitions() {
 		if (this.central.generators.length > 0) {
 			this.central.generators.forEach((element, index) => {
 				variables.push({ name: 'Generator ' + element.label, variableId: 'generator_' + element.label })
-				variables.push({ name: 'Generator ' + element.label + ' loop', variableId: 'generator_' + element.label + '_loop' })
+				variables.push({
+					name: 'Generator ' + element.label + ' loop',
+					variableId: 'generator_' + element.label + '_loop',
+				})
 				variables.push({
 					name: 'Generator ' + element.label + ' status',
 					variableId: 'generator_' + element.label + '_status',
@@ -58,45 +63,54 @@ export function updateVariableDefinitions() {
 		}
 	}
 
-	this.setVariableDefinitions(variables)
+	return variables
 }
 
 // #########################
 // #### Update Variables ####
 // #########################
 export function updateVariables() {
-	this. setVariableValues('version', this.central.version)
-
+	let accessLevel = 'Lite'
 	if (this.central.access < 0) {
-		this. setVariableValues({access: 'Lite'})
+		accessLevel = 'Lite'
 	} else if (this.central.access > 0) {
-		this. setVariableValues({access: 'Enterprise'})
+		accessLevel = 'Enterprise'
 	} else {
-		this. setVariableValues({access: 'Pro'})
+		accessLevel = 'Pro'
 	}
+
+	this.setVariableValues({ version: this.central.version, access: accessLevel })
 
 	if (this.central.access >= 0) {
 		if (this.central.routers.length > 0) {
 			this.central.routers.forEach((element, index) => {
-				this. setVariableValues('router_' + element.label, element.label)
-				this. setVariableValues('router_' + element.label + '_output', element.name)
+				let name = element.label
+				name = name.replace(/[\W]/gi, '_')
+				this.setVariableValues({
+					[`router_${name}`]: element.label,
+					[`router_${name}_output`]: element.name,
+				})
 			})
 		}
 
 		if (this.central.generators.length > 0) {
 			this.central.generators.forEach((element, index) => {
-				this. setVariableValues('generator_' + element.label, element.label)
-				this. setVariableValues('generator_' + element.label + '_loop', element.loop)
+				this.setVariableValues({
+					[`generator_${element.label}`]: element.label,
+					[`generator_${element.label}_loop`]: element.loop,
+				})
 			})
 		}
 
 		if (this.central.retransmitters.length > 0) {
 			this.central.retransmitters.forEach((element, index) => {
-				this. setVariableValues('retransmitter_' + element.label, element.label)
-				this. setVariableValues('retransmitter_' + element.label + '_audioname', element.AudioNDIname)
-				this. setVariableValues('retransmitter_' + element.label + '_audiostatus', element.AudioPlayStatus)
-				this. setVariableValues('retransmitter_' + element.label + '_videoname', element.VideoNDIname)
-				this. setVariableValues('retransmitter_' + element.label + '_videostatus', element.VideoPlayStatus)
+				this.setVariableValues({
+					[`retransmitter_${element.label}`]: element.label,
+					[`retransmitter_${element.label}_audioname`]: element.AudioNDIname,
+					[`retransmitter_${element.label}_audiostatus`]: element.AudioPlayStatus,
+					[`retransmitter_${element.label}_videoname`]: element.VideoNDIname,
+					[`retransmitter_${element.label}_videostatus`]: element.VideoPlayStatus,
+				})
 			})
 		}
 	}

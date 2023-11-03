@@ -20,12 +20,6 @@
 		"entrypoint": "../index.js"
 	},
 	"manufacturer": "BirdDog",
-	"products": [
-		"Central"
-	],
-	"keywords": [
-		"BirdDog",
-		"Central",
-		"Software"
-	]
+	"products": ["Central"],
+	"keywords": ["BirdDog", "Central", "Software"]
 }
