@@ -13,21 +13,26 @@ export function getPresets() {
 	presets[`srcToDest`] = {
 		type: 'button',
 		category: 'Connect',
-		label: 'Connect Source to Destination',
-		bank: {
-			style: 'text',
+		name: 'Connect Source to Destination',
+		options: {},
+		style: {
 			text: 'Connect Src\\nto Dest',
 			size: 'auto',
 			color: ColorWhite,
 			bgcolor: ColorBlack,
 		},
-		actions: [
+		steps: [
 			{
-				action: 'connectSourceToDest',
-				options: {
-					source: this.central.sources[0] ? this.central.sources[0].id : 'select source',
-					destination: this.central.destinations[0] ? this.central.destinations[0].id : 'select destination',
-				},
+				down: [
+					{
+						actionId: 'connectSourceToDest',
+						options: {
+							source: this.central.sources[0] ? this.central.sources[0].id : 'select source',
+							destination: this.central.destinations[0] ? this.central.destinations[0].id : 'select destination',
+						},
+					},
+				],
+				up: [],
 			},
 		],
 	}
@@ -35,17 +40,22 @@ export function getPresets() {
 	presets[`addGenerator`] = {
 		type: 'button',
 		category: 'Generator',
-		label: 'Add Generator',
-		bank: {
-			style: 'text',
+		name: 'Add Generator',
+		options: {},
+		style: {
 			text: 'Add\\nGenerator',
 			size: 'auto',
 			color: ColorWhite,
 			bgcolor: ColorBlack,
 		},
-		actions: [
+		steps: [
 			{
-				action: 'addGenerator',
+				down: [
+					{
+						actionId: 'addGenerator',
+					},
+				],
+				up: [],
 			},
 		],
 	}
@@ -53,20 +63,25 @@ export function getPresets() {
 	presets[`deleteGenerator`] = {
 		type: 'button',
 		category: 'Generator',
-		label: 'Delete Generator',
-		bank: {
-			style: 'text',
+		name: 'Delete Generator',
+		options: {},
+		style: {
 			text: 'Delete\\nGenerator',
 			size: 'auto',
 			color: ColorWhite,
 			bgcolor: ColorBlack,
 		},
-		actions: [
+		steps: [
 			{
-				action: 'addGenerator',
-				options: {
-					generator: this.central.generators[0] ? this.central.generators[0].id : 'select generator',
-				},
+				down: [
+					{
+						actionId: 'addGenerator',
+						options: {
+							generator: this.central.generators[0] ? this.central.generators[0].id : 'select generator',
+						},
+					},
+				],
+				up: [],
 			},
 		],
 	}
@@ -74,21 +89,26 @@ export function getPresets() {
 	presets[`playlistToGenerator`] = {
 		type: 'button',
 		category: 'Generator',
-		label: 'Add Playlist Source to Generator',
-		bank: {
-			style: 'text',
+		name: 'Add Playlist Source to Generator',
+		options: {},
+		style: {
 			text: 'Add\\nPlaylist',
 			size: 'auto',
 			color: ColorWhite,
 			bgcolor: ColorBlack,
 		},
-		actions: [
+		steps: [
 			{
-				action: 'addPlaylistToGenerator',
-				options: {
-					generator: this.central.generators[0] ? this.central.generators[0].id : 'select generator',
-					playlist: this.central.gen_sources[0] ? this.central.gen_sources[0].id : 'select playlist',
-				},
+				down: [
+					{
+						actionId: 'addPlaylistToGenerator',
+						options: {
+							generator: this.central.generators[0] ? this.central.generators[0].id : 'select generator',
+							playlist: this.central.gen_sources[0] ? this.central.gen_sources[0].id : 'select playlist',
+						},
+					},
+				],
+				up: [],
 			},
 		],
 	}
@@ -96,21 +116,26 @@ export function getPresets() {
 	presets[`deletePlaylisteToGenerator`] = {
 		type: 'button',
 		category: 'Generator',
-		label: 'Delete Playlist Source from Generator',
-		bank: {
-			style: 'text',
+		name: 'Delete Playlist Source from Generator',
+		options: {},
+		style: {
 			text: 'Add\\nPlaylist',
 			size: 'auto',
 			color: ColorWhite,
 			bgcolor: ColorBlack,
 		},
-		actions: [
+		steps: [
 			{
-				action: 'delPlaylistFromGenerator',
-				options: {
-					generator: this.central.generators[0] ? this.central.generators[0].id : 'select generator',
-					playlist: this.central.gen_sources[0] ? this.central.gen_sources[0].id : 'select playlist',
-				},
+				down: [
+					{
+						actionId: 'delPlaylistFromGenerator',
+						options: {
+							generator: this.central.generators[0] ? this.central.generators[0].id : 'select generator',
+							playlist: this.central.gen_sources[0] ? this.central.gen_sources[0].id : 'select playlist',
+						},
+					},
+				],
+				up: [],
 			},
 		],
 	}
@@ -118,26 +143,31 @@ export function getPresets() {
 	presets[`playPlatListGenerator`] = {
 		type: 'button',
 		category: 'Generator',
-		label: 'Play Playlist',
-		bank: {
-			style: 'text',
+		name: 'Play Playlist',
+		options: {},
+		style: {
 			text: 'Play\\nPlaylist',
 			size: 'auto',
 			color: ColorWhite,
 			bgcolor: ColorBlack,
 		},
-		actions: [
+		steps: [
 			{
-				action: 'generatorMediaControl',
-				options: {
-					generator: this.central.generators[0] ? this.central.generators[0].id : 'select generator',
-					control: 'play',
-				},
+				down: [
+					{
+						actionId: 'generatorMediaControl',
+						options: {
+							generator: this.central.generators[0] ? this.central.generators[0].id : 'select generator',
+							control: 'play',
+						},
+					},
+				],
+				up: [],
 			},
 		],
 		feedbacks: [
 			{
-				type: 'generatorMediaStatus',
+				feedbackId: 'generatorMediaStatus',
 				options: { control: 'play' },
 				style: {
 					color: ColorBlack,
@@ -150,26 +180,31 @@ export function getPresets() {
 	presets[`stopPlaylistGenerator`] = {
 		type: 'button',
 		category: 'Generator',
-		label: 'Stop Playlist',
-		bank: {
-			style: 'text',
+		name: 'Stop Playlist',
+		options: {},
+		style: {
 			text: 'Stop\\nPlaylist',
 			size: 'auto',
 			color: ColorWhite,
 			bgcolor: ColorBlack,
 		},
-		actions: [
+		steps: [
 			{
-				action: 'generatorMediaControl',
-				options: {
-					generator: this.central.generators[0] ? this.central.generators[0].id : 'select generator',
-					control: 'stop',
-				},
+				down: [
+					{
+						actionId: 'generatorMediaControl',
+						options: {
+							generator: this.central.generators[0] ? this.central.generators[0].id : 'select generator',
+							control: 'stop',
+						},
+					},
+				],
+				up: [],
 			},
 		],
 		feedbacks: [
 			{
-				type: 'generatorMediaStatus',
+				feedbackId: 'generatorMediaStatus',
 				options: { control: 'stop' },
 				style: {
 					color: ColorBlack,
@@ -182,26 +217,31 @@ export function getPresets() {
 	presets[`pausePlaylistGenerator`] = {
 		type: 'button',
 		category: 'Generator',
-		label: 'Pause Playlist',
-		bank: {
-			style: 'text',
+		name: 'Pause Playlist',
+		options: {},
+		style: {
 			text: 'Pause\\nPlaylist',
 			size: 'auto',
 			color: ColorWhite,
 			bgcolor: ColorBlack,
 		},
-		actions: [
+		steps: [
 			{
-				action: 'generatorMediaControl',
-				options: {
-					generator: this.central.generators[0] ? this.central.generators[0].id : 'select generator',
-					control: 'pause',
-				},
+				down: [
+					{
+						actionId: 'generatorMediaControl',
+						options: {
+							generator: this.central.generators[0] ? this.central.generators[0].id : 'select generator',
+							control: 'pause',
+						},
+					},
+				],
+				up: [],
 			},
 		],
 		feedbacks: [
 			{
-				type: 'generatorMediaStatus',
+				feedbackId: 'generatorMediaStatus',
 				options: { control: 'pause' },
 				style: {
 					color: ColorBlack,
@@ -214,21 +254,26 @@ export function getPresets() {
 	presets[`nextPlaylistGenerator`] = {
 		type: 'button',
 		category: 'Generator',
-		label: 'Next in Playlist',
-		bank: {
-			style: 'text',
+		name: 'Next in Playlist',
+		options: {},
+		style: {
 			text: 'Next\\nin Playlist',
 			size: 'auto',
 			color: ColorWhite,
 			bgcolor: ColorBlack,
 		},
-		actions: [
+		steps: [
 			{
-				action: 'generatorMediaControl',
-				options: {
-					generator: this.central.generators[0] ? this.central.generators[0].id : 'select generator',
-					control: 'skip',
-				},
+				down: [
+					{
+						actionId: 'generatorMediaControl',
+						options: {
+							generator: this.central.generators[0] ? this.central.generators[0].id : 'select generator',
+							control: 'skip',
+						},
+					},
+				],
+				up: [],
 			},
 		],
 	}
@@ -236,27 +281,32 @@ export function getPresets() {
 	presets[`looptPlaylistGenerator`] = {
 		type: 'button',
 		category: 'Generator',
-		label: 'Loop Playlist',
-		bank: {
-			style: 'text',
+		name: 'Loop Playlist',
+		options: {},
+		style: {
 			text: 'Loop\\nPlaylist',
 			size: 'auto',
 			color: ColorWhite,
 			bgcolor: ColorBlack,
 		},
-		actions: [
+		steps: [
 			{
-				action: 'generatorMediaControl',
-				options: {
-					generator: this.central.generators[0] ? this.central.generators[0].id : 'select generator',
-					control: 'loop',
-					loop: 'TOGGLE',
-				},
+				down: [
+					{
+						actionId: 'generatorMediaControl',
+						options: {
+							generator: this.central.generators[0] ? this.central.generators[0].id : 'select generator',
+							control: 'loop',
+							loop: 'TOGGLE',
+						},
+					},
+				],
+				up: [],
 			},
 		],
 		feedbacks: [
 			{
-				type: 'generatorMediaStatus',
+				feedbackId: 'generatorMediaStatus',
 				options: { control: 'loop', loop: 'TRUE' },
 				style: {
 					color: ColorBlack,
@@ -270,17 +320,22 @@ export function getPresets() {
 		presets[`addSourceGroup`] = {
 			type: 'button',
 			category: 'Source',
-			label: 'Add Source Group',
-			bank: {
-				style: 'text',
+			name: 'Add Source Group',
+			options: {},
+			style: {
 				text: 'Add\\nSource Group',
 				size: 'auto',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
+			steps: [
 				{
-					action: 'addSourceGroup',
+					down: [
+						{
+							actionId: 'addSourceGroup',
+						},
+					],
+					up: [],
 				},
 			],
 		}
@@ -288,20 +343,25 @@ export function getPresets() {
 		presets[`deleteSourceGroup`] = {
 			type: 'button',
 			category: 'Source',
-			label: 'Delete Source Group',
-			bank: {
-				style: 'text',
+			name: 'Delete Source Group',
+			options: {},
+			style: {
 				text: 'Add\\nSource Group',
 				size: 'auto',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
+			steps: [
 				{
-					action: 'delSourceGroup',
-					options: {
-						group: this.central.sourcegroups[0] ? this.central.sourcegroups[0].id : 'select source group',
-					},
+					down: [
+						{
+							actionId: 'delSourceGroup',
+							options: {
+								group: this.central.sourcegroups[0] ? this.central.sourcegroups[0].id : 'select source group',
+							},
+						},
+					],
+					up: [],
 				},
 			],
 		}
@@ -309,21 +369,26 @@ export function getPresets() {
 		presets[`addSourceToGroup`] = {
 			type: 'button',
 			category: 'Source',
-			label: 'Add Source to Source Group',
-			bank: {
-				style: 'text',
+			name: 'Add Source to Source Group',
+			options: {},
+			style: {
 				text: 'Add Source\\nto Group',
 				size: 'auto',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
+			steps: [
 				{
-					action: 'addSourceToSourceGroup',
-					options: {
-						group: this.central.sourcegroups[0] ? this.central.sourcegroups[0].id : 'select source group',
-						source: this.central.sources[0] ? this.central.sources[0].id : 'select source',
-					},
+					down: [
+						{
+							actionId: 'addSourceToSourceGroup',
+							options: {
+								group: this.central.sourcegroups[0] ? this.central.sourcegroups[0].id : 'select source group',
+								source: this.central.sources[0] ? this.central.sources[0].id : 'select source',
+							},
+						},
+					],
+					up: [],
 				},
 			],
 		}
@@ -331,21 +396,26 @@ export function getPresets() {
 		presets[`deleteSourceFromGroup`] = {
 			type: 'button',
 			category: 'Source',
-			label: 'Delete Source from Source Group',
-			bank: {
-				style: 'text',
+			name: 'Delete Source from Source Group',
+			options: {},
+			style: {
 				text: 'Delete Source\\nfrom Group',
 				size: 'auto',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
+			steps: [
 				{
-					action: 'delSourceFromSourceGroup',
-					options: {
-						group: this.central.sourcegroups[0] ? this.central.sourcegroups[0].id : 'select source group',
-						source: this.central.sources[0] ? this.central.sources[0].id : 'select source',
-					},
+					down: [
+						{
+							actionId: 'delSourceFromSourceGroup',
+							options: {
+								group: this.central.sourcegroups[0] ? this.central.sourcegroups[0].id : 'select source group',
+								source: this.central.sources[0] ? this.central.sources[0].id : 'select source',
+							},
+						},
+					],
+					up: [],
 				},
 			],
 		}
@@ -353,21 +423,26 @@ export function getPresets() {
 		presets[`connectSourcetoDestGroup`] = {
 			type: 'button',
 			category: 'Connect',
-			label: 'Connect Source to Destination Group',
-			bank: {
-				style: 'text',
+			name: 'Connect Source to Destination Group',
+			options: {},
+			style: {
 				text: 'Connect Source\\nto Dest Group',
 				size: 'auto',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
+			steps: [
 				{
-					action: 'connectSourceToDestGroup',
-					options: {
-						source: this.central.sources[0] ? this.central.sources[0].id : 'select source',
-						group: this.central.destgroups[0] ? this.central.destgroups[0].id : 'select destination groups',
-					},
+					down: [
+						{
+							actionId: 'connectSourceToDestGroup',
+							options: {
+								source: this.central.sources[0] ? this.central.sources[0].id : 'select source',
+								group: this.central.destgroups[0] ? this.central.destgroups[0].id : 'select destination groups',
+							},
+						},
+					],
+					up: [],
 				},
 			],
 		}
@@ -375,20 +450,25 @@ export function getPresets() {
 		presets[`addRouter`] = {
 			type: 'button',
 			category: 'Router',
-			label: 'Add Router',
-			bank: {
-				style: 'text',
+			name: 'Add Router',
+			options: {},
+			style: {
 				text: 'Add\\nRouter',
 				size: 'auto',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
+			steps: [
 				{
-					action: 'addRouter',
-					options: {
-						router: this.central.routers[0] ? this.central.routers[0].id : 'select router',
-					},
+					down: [
+						{
+							actionId: 'addRouter',
+							options: {
+								router: this.central.routers[0] ? this.central.routers[0].id : 'select router',
+							},
+						},
+					],
+					up: [],
 				},
 			],
 		}
@@ -396,20 +476,25 @@ export function getPresets() {
 		presets[`deleteRouter`] = {
 			type: 'button',
 			category: 'Router',
-			label: 'Delete Router',
-			bank: {
-				style: 'text',
+			name: 'Delete Router',
+			options: {},
+			style: {
 				text: 'Delete\\nRouter',
 				size: 'auto',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
+			steps: [
 				{
-					action: 'delRouter',
-					options: {
-						router: this.central.routers[0] ? this.central.routers[0].id : 'select router',
-					},
+					down: [
+						{
+							actionId: 'delRouter',
+							options: {
+								router: this.central.routers[0] ? this.central.routers[0].id : 'select router',
+							},
+						},
+					],
+					up: [],
 				},
 			],
 		}
@@ -417,21 +502,26 @@ export function getPresets() {
 		presets[`linkSourceGroupToRouter`] = {
 			type: 'button',
 			category: 'Router',
-			label: 'Link Source Group to Router',
-			bank: {
-				style: 'text',
+			name: 'Link Source Group to Router',
+			options: {},
+			style: {
 				text: 'Link to\\nRouter',
 				size: 'auto',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
+			steps: [
 				{
-					action: 'linkRouter',
-					options: {
-						router: this.central.routers[0] ? this.central.routers[0].id : 'select router',
-						group: this.central.sourcegroups[0] ? this.central.sourcegroups[0].id : 'select source group',
-					},
+					down: [
+						{
+							actionId: 'linkRouter',
+							options: {
+								router: this.central.routers[0] ? this.central.routers[0].id : 'select router',
+								group: this.central.sourcegroups[0] ? this.central.sourcegroups[0].id : 'select source group',
+							},
+						},
+					],
+					up: [],
 				},
 			],
 		}
@@ -439,21 +529,26 @@ export function getPresets() {
 		presets[`connectSourceToRouter`] = {
 			type: 'button',
 			category: 'Router',
-			label: 'Connect Source to Router',
-			bank: {
-				style: 'text',
+			name: 'Connect Source to Router',
+			options: {},
+			style: {
 				text: 'Connect Source\\nto Router',
 				size: 'auto',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
+			steps: [
 				{
-					action: 'sconnectRouter',
-					options: {
-						router: this.central.routers[0] ? this.central.routers[0].id : 'select router',
-						source: this.central.sources[0] ? this.central.sources[0].id : 'select source',
-					},
+					down: [
+						{
+							actionId: 'sconnectRouter',
+							options: {
+								router: this.central.routers[0] ? this.central.routers[0].id : 'select router',
+								source: this.central.sources[0] ? this.central.sources[0].id : 'select source',
+							},
+						},
+					],
+					up: [],
 				},
 			],
 		}
@@ -461,17 +556,22 @@ export function getPresets() {
 		presets[`addRetransmitter`] = {
 			type: 'button',
 			category: 'Retransmitter',
-			label: 'Add Retransmitter',
-			bank: {
-				style: 'text',
+			name: 'Add Retransmitter',
+			options: {},
+			style: {
 				text: 'Add\\nRetransmitter',
 				size: 'auto',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
+			steps: [
 				{
-					action: 'addRetransmitter',
+					down: [
+						{
+							actionId: 'addRetransmitter',
+						},
+					],
+					up: [],
 				},
 			],
 		}
@@ -479,20 +579,27 @@ export function getPresets() {
 		presets[`deleteRetransmitter`] = {
 			type: 'button',
 			category: 'Retransmitter',
-			label: 'Delete Retransmitter',
-			bank: {
-				style: 'text',
+			name: 'Delete Retransmitter',
+			options: {},
+			style: {
 				text: 'Delete\\nRetransmitter',
 				size: 'auto',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
+			steps: [
 				{
-					action: 'delRetransmitter',
-					options: {
-						retransmitter: this.central.retransmitters[0] ? this.central.retransmitters[0].id : 'select retransmitter',
-					},
+					down: [
+						{
+							actionId: 'delRetransmitter',
+							options: {
+								retransmitter: this.central.retransmitters[0]
+									? this.central.retransmitters[0].id
+									: 'select retransmitter',
+							},
+						},
+					],
+					up: [],
 				},
 			],
 		}
@@ -500,21 +607,28 @@ export function getPresets() {
 		presets[`connectAudioRetransmitter`] = {
 			type: 'button',
 			category: 'Retransmitter',
-			label: 'Connect Audio Source to Retransmitter',
-			bank: {
-				style: 'text',
+			name: 'Connect Audio Source to Retransmitter',
+			options: {},
+			style: {
 				text: 'Connect\\nAudio\\nto Retransmitter',
 				size: 'auto',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
+			steps: [
 				{
-					action: 'aconnectRetransmitter',
-					options: {
-						retransmitter: this.central.retransmitters[0] ? this.central.retransmitters[0].id : 'select retransmitter',
-						source: this.central.sources[0] ? this.central.sources[0].id : 'select source',
-					},
+					down: [
+						{
+							actionId: 'aconnectRetransmitter',
+							options: {
+								retransmitter: this.central.retransmitters[0]
+									? this.central.retransmitters[0].id
+									: 'select retransmitter',
+								source: this.central.sources[0] ? this.central.sources[0].id : 'select source',
+							},
+						},
+					],
+					up: [],
 				},
 			],
 		}
@@ -522,21 +636,28 @@ export function getPresets() {
 		presets[`connectVideoRetransmitter`] = {
 			type: 'button',
 			category: 'Retransmitter',
-			label: 'Connect Video Source to Retransmitter',
-			bank: {
-				style: 'text',
+			name: 'Connect Video Source to Retransmitter',
+			options: {},
+			style: {
 				text: 'Connect\\nVideo\\nto Retransmitter',
 				size: 'auto',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
+			steps: [
 				{
-					action: 'vconnectRetransmitter',
-					options: {
-						retransmitter: this.central.retransmitters[0] ? this.central.retransmitters[0].id : 'select retransmitter',
-						source: this.central.sources[0] ? this.central.sources[0].id : 'select source',
-					},
+					down: [
+						{
+							actionId: 'vconnectRetransmitter',
+							options: {
+								retransmitter: this.central.retransmitters[0]
+									? this.central.retransmitters[0].id
+									: 'select retransmitter',
+								source: this.central.sources[0] ? this.central.sources[0].id : 'select source',
+							},
+						},
+					],
+					up: [],
 				},
 			],
 		}
@@ -544,21 +665,28 @@ export function getPresets() {
 		presets[`playRetransmitter`] = {
 			type: 'button',
 			category: 'Retransmitter',
-			label: 'Play Retransmitter',
-			bank: {
-				style: 'text',
+			name: 'Play Retransmitter',
+			options: {},
+			style: {
 				text: 'Play\\nRetransmitter',
 				size: 'auto',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
+			steps: [
 				{
-					action: 'mediaControlRetransmitter',
-					options: {
-						retransmitter: this.central.retransmitters[0] ? this.central.retransmitters[0].id : 'select retransmitter',
-						control: 'play',
-					},
+					down: [
+						{
+							actionId: 'mediaControlRetransmitter',
+							options: {
+								retransmitter: this.central.retransmitters[0]
+									? this.central.retransmitters[0].id
+									: 'select retransmitter',
+								control: 'play',
+							},
+						},
+					],
+					up: [],
 				},
 			],
 		}
@@ -566,21 +694,28 @@ export function getPresets() {
 		presets[`stopRetransmitter`] = {
 			type: 'button',
 			category: 'Retransmitter',
-			label: 'Stop Retransmitter',
-			bank: {
-				style: 'text',
+			name: 'Stop Retransmitter',
+			options: {},
+			style: {
 				text: 'Stop\\nRetransmitter',
 				size: 'auto',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
+			steps: [
 				{
-					action: 'mediaControlRetransmitter',
-					options: {
-						retransmitter: this.central.retransmitters[0] ? this.central.retransmitters[0].id : 'select retransmitter',
-						control: 'stop',
-					},
+					down: [
+						{
+							actionId: 'mediaControlRetransmitter',
+							options: {
+								retransmitter: this.central.retransmitters[0]
+									? this.central.retransmitters[0].id
+									: 'select retransmitter',
+								control: 'stop',
+							},
+						},
+					],
+					up: [],
 				},
 			],
 		}
@@ -588,21 +723,28 @@ export function getPresets() {
 		presets[`stopAudioRetransmitter`] = {
 			type: 'button',
 			category: 'Retransmitter',
-			label: 'Stop Audio Retransmitter',
-			bank: {
-				style: 'text',
+			name: 'Stop Audio Retransmitter',
+			options: {},
+			style: {
 				text: 'Stop Audio\\nRetransmitter',
 				size: 'auto',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
+			steps: [
 				{
-					action: 'mediaControlRetransmitter',
-					options: {
-						retransmitter: this.central.retransmitters[0] ? this.central.retransmitters[0].id : 'select retransmitter',
-						control: 'astop',
-					},
+					down: [
+						{
+							actionId: 'mediaControlRetransmitter',
+							options: {
+								retransmitter: this.central.retransmitters[0]
+									? this.central.retransmitters[0].id
+									: 'select retransmitter',
+								control: 'astop',
+							},
+						},
+					],
+					up: [],
 				},
 			],
 		}
@@ -610,21 +752,28 @@ export function getPresets() {
 		presets[`stopVideoRetransmitter`] = {
 			type: 'button',
 			category: 'Retransmitter',
-			label: 'Stop Video Retransmitter',
-			bank: {
-				style: 'text',
+			name: 'Stop Video Retransmitter',
+			options: {},
+			style: {
 				text: 'Stop Video\\nRetransmitter',
 				size: 'auto',
 				color: ColorWhite,
 				bgcolor: ColorBlack,
 			},
-			actions: [
+			steps: [
 				{
-					action: 'mediaControlRetransmitter',
-					options: {
-						retransmitter: this.central.retransmitters[0] ? this.central.retransmitters[0].id : 'select retransmitter',
-						control: 'vstop',
-					},
+					down: [
+						{
+							actionId: 'mediaControlRetransmitter',
+							options: {
+								retransmitter: this.central.retransmitters[0]
+									? this.central.retransmitters[0].id
+									: 'select retransmitter',
+								control: 'vstop',
+							},
+						},
+					],
+					up: [],
 				},
 			],
 		}

@@ -70,14 +70,7 @@ class BirdDogCentralInstance extends InstanceBase {
 
 	async destroy() {
 		// Clear polling timers
-		if (this.timers.pollCentralConfig !== undefined) {
-			clearInterval(this.timers.pollCentralConfig)
-			this.timers.pollCentralConfig = null
-		}
-		if (this.timers.pollCentralStatus) {
-			clearInterval(this.timers.pollCentralStatus)
-			this.timers.pollCentralStatus = null
-		}
+		this.stopPolling()
 	}
 
 	initActions() {
@@ -91,8 +84,8 @@ class BirdDogCentralInstance extends InstanceBase {
 	}
 
 	initPresets() {
-		//const presets = getPresets.bind(this)()
-		//this.setPresetDefinitions(presets)
+		const presets = getPresets.bind(this)()
+		this.setPresetDefinitions(presets)
 	}
 
 	initVariables() {
@@ -203,6 +196,8 @@ class BirdDogCentralInstance extends InstanceBase {
 						changed.routerInfo = this.routerInfo(data)
 						break
 					case 'sconnect':
+						this.routerInfo(data)
+						changed.routerConnect = true
 					case 'dconnect':
 						this.sendCommand('router', 'list')
 						//changed.routerInfo = this.routerInfo(data)
