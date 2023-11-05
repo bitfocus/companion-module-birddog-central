@@ -1,17 +1,19 @@
-exports.initFeedbacks = function () {
-	const ColorWhite = this.rgb(255, 255, 255) // White
-	const ColorBlack = this.rgb(0, 0, 0) // Black
-	const ColorRed = this.rgb(255, 0, 0) // Red
-	const ColorGreen = this.rgb(0, 255, 0) // Green
-	const ColorOrange = this.rgb(255, 102, 0) // Orange
+import { combineRgb } from '@companion-module/base'
+
+export function getFeedbacks() {
+	const ColorWhite = combineRgb(255, 255, 255) // White
+	const ColorBlack = combineRgb(0, 0, 0) // Black
+	const ColorRed = combineRgb(255, 0, 0) // Red
+	const ColorGreen = combineRgb(0, 255, 0) // Green
+	const ColorOrange = combineRgb(255, 102, 0) // Orange
 
 	const feedbacks = {}
 
 	feedbacks.generatorMediaStatus = {
 		type: 'boolean',
-		label: 'Generator Media Status',
+		name: 'Generator Media Status',
 		description: 'If the selected generator has the selected status, change the style of the button',
-		style: {
+		defaultStyle: {
 			color: ColorBlack,
 			bgcolor: ColorGreen,
 		},
@@ -64,9 +66,9 @@ exports.initFeedbacks = function () {
 	if (this.central.access >= 0) {
 		feedbacks.sourceConnectedToRouter = {
 			type: 'boolean',
-			label: 'Source Connected to Router',
+			name: 'Source Connected to Router',
 			description: 'If the selected source is connected to the selected router, change the style of the button',
-			style: {
+			defaultStyle: {
 				color: ColorBlack,
 				bgcolor: ColorGreen,
 			},
@@ -93,9 +95,9 @@ exports.initFeedbacks = function () {
 
 		feedbacks.retransmitterAudioSource = {
 			type: 'boolean',
-			label: 'Retransmitter Audio Source',
+			name: 'Retransmitter Audio Source',
 			description: 'If the selected retransmitter has the selected Audio source, change the style of the button',
-			style: {
+			defaultStyle: {
 				color: ColorBlack,
 				bgcolor: ColorGreen,
 			},
@@ -128,9 +130,9 @@ exports.initFeedbacks = function () {
 		}
 		feedbacks.retransmitterAudioStatus = {
 			type: 'boolean',
-			label: 'Retransmitter Audio Status',
+			name: 'Retransmitter Audio Status',
 			description: 'If the selected retransmitter has the selected Audio status, change the style of the button',
-			style: {
+			defaultStyle: {
 				color: ColorBlack,
 				bgcolor: ColorGreen,
 			},
@@ -163,9 +165,9 @@ exports.initFeedbacks = function () {
 
 		feedbacks.retransmitterVideoSource = {
 			type: 'boolean',
-			label: 'Retransmitter Video Source',
+			name: 'Retransmitter Video Source',
 			description: 'If the selected retransmitter has the selected Video source, change the style of the button',
-			style: {
+			defaultStyle: {
 				color: ColorBlack,
 				bgcolor: ColorGreen,
 			},
@@ -198,9 +200,9 @@ exports.initFeedbacks = function () {
 		}
 		feedbacks.retransmitterVideoStatus = {
 			type: 'boolean',
-			label: 'Retransmitter Video status',
+			name: 'Retransmitter Video status',
 			description: 'If the selected retransmitter has the selected Video status, change the style of the button',
-			style: {
+			defaultStyle: {
 				color: ColorBlack,
 				bgcolor: ColorGreen,
 			},
@@ -231,8 +233,6 @@ exports.initFeedbacks = function () {
 			},
 		}
 	}
-
-	this.setFeedbackDefinitions(feedbacks)
 
 	return feedbacks
 }

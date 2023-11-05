@@ -1,43 +1,42 @@
-const instance_skel = require('../../instance_skel')
-const actions = require('./actions')
-const presets = require('./presets')
-const { updateVariableDefinitions, updateVariables } = require('./variables')
-const { initFeedbacks } = require('./feedbacks')
-const upgradeScripts = require('./upgrades')
+import { InstanceBase, runEntrypoint, InstanceStatus } from '@companion-module/base'
+import { getActions } from './actions.js'
+import { getFeedbacks } from './feedbacks.js'
+import { getPresets } from './presets.js'
+import { updateVariableDefinitions, updateVariables } from './variables.js'
+import { upgradeScripts } from './upgrades.js'
 
-const udp = require('../../udp')
-const fetch = require('node-fetch')
+import fetch from 'node-fetch'
 
-let debug
-let log
+class BirdDogCentralInstance extends InstanceBase {
+	constructor(internal) {
+		super(internal)
+	}
 
-class instance extends instance_skel {
-	constructor(system, id, config) {
-		super(system, id, config)
-
-		Object.assign(this, {
-			...actions,
-			...presets,
-		})
-
-		this.updateVariableDefinitions = updateVariableDefinitions
-		this.updateVariables = updateVariables
-
-		// Keep track of setInterval
+	async init(config) {
+		this.config = config
 		this.timers = {
 			pollCentralConfig: null, // ID of setInterval for Central polling
 			pollCentralStatus: null, // ID of setInterval for Camera Status polling
 		}
+		this.updateVariables = updateVariables
+
+		this.central = {}
+		this.central.sources = []
+		this.central.destinations = []
+		this.central.sourcegroups = []
+		this.central.destgroups = []
+		this.central.routers = []
+		this.central.generators = []
+		this.central.gen_sources = []
+		this.central.retransmitters = []
+
+		this.updateStatus(InstanceStatus.Connecting)
+
+		// Initialise Module
+		this.getInitialConfig()
 	}
 
-	// Make sure to NOT commit this line uncommented
-	//static DEVELOPER_forceStartupUpgradeScript = 2
-
-	static GetUpgradeScripts() {
-		return []
-	}
-
-	config_fields() {
+	getConfigFields() {
 		return [
 			{
 				type: 'text',
@@ -56,74 +55,42 @@ class instance extends instance_skel {
 		]
 	}
 
-	updateConfig(config) {
+	async configUpdated(config) {
 		this.config = config
 
-		this.status(this.STATUS_WARNING, 'Connecting')
+		this.updateStatus(InstanceStatus.Connecting)
 
 		if (this.config.host !== undefined) {
-			this.debug('----Host details:- ' + this.config.host)
+			this.log('debug', '----Host details:- ' + this.config.host)
 			this.init()
 		} else {
-			this.status(
-				this.STATUS_ERROR,
-				'Unable to connect, please enter an IP address for Central 2.0 in the module settings'
-			)
+			this.updateStatus('error', 'Invalid IP address')
 		}
 	}
 
-	destroy() {
-		// Clear open connections
-		if (this.udp !== undefined) {
-			this.udp.destroy()
-		}
+	async destroy() {
 		// Clear polling timers
-		if (this.timers.pollCentralConfig !== undefined) {
-			clearInterval(this.timers.pollCentralConfig)
-			this.timers.pollCentralConfig = null
-		}
-		if (this.timers.pollCentralStatus) {
-			clearInterval(this.timers.pollCentralStatus)
-			this.timers.pollCentralStatus = null
-		}
-
-		debug('destroy', this.id)
+		this.stopPolling()
 	}
 
-	init() {
-		debug = this.debug
-		log = this.log
-		this.central = {}
-		this.central.sources = []
-		this.central.destinations = []
-		this.central.sourcegroups = []
-		this.central.destgroups = []
-		this.central.routers = []
-		this.central.generators = []
-		this.central.gen_sources = []
-		this.central.retransmitters = []
-
-		this.status(this.STATUS_WARNING, 'Connecting')
-
-		// Initialise Module
-		this.getInitialConfig()
-	}
-
-	initVariables() {
-		this.updateVariableDefinitions()
+	initActions() {
+		const actions = getActions.bind(this)()
+		this.setActionDefinitions(actions)
 	}
 
 	initFeedbacks() {
-		const feedbacks = initFeedbacks.bind(this)()
+		const feedbacks = getFeedbacks.bind(this)()
 		this.setFeedbackDefinitions(feedbacks)
 	}
 
-	initPresets(updates) {
-		this.setPresetDefinitions(this.getPresets())
+	initPresets() {
+		const presets = getPresets.bind(this)()
+		this.setPresetDefinitions(presets)
 	}
 
-	actions(system) {
-		this.setActions(this.getActions())
+	initVariables() {
+		const variables = updateVariableDefinitions.bind(this)()
+		this.setVariableDefinitions(variables)
 	}
 
 	sendCommand(cmd, subcmd, parameters) {
@@ -137,9 +104,9 @@ class instance extends instance_skel {
 			str = cmd
 		}
 
-		//this.debug('---- Command String is', str)
+		//this.log('debug','---- Command String is', str)
 
-		let url = `http://${this.config.host}:8080/` + str
+		let url = `http://${this.config?.host}:8080/` + str
 		let options = {
 			method: 'POST',
 		}
@@ -151,11 +118,12 @@ class instance extends instance_skel {
 				}
 			})
 			.then((json) => {
-				this.status(this.STATUS_OK)
+				this.updateStatus(InstanceStatus.Ok)
+				//console.log(json)
 				this.processData(cmd, subcmd, json)
 			})
 			.catch((err) => {
-				this.debug(err)
+				this.log('debug', err)
 				let errorText = String(err)
 				if (
 					errorText.match('ECONNREFUSED') ||
@@ -163,19 +131,17 @@ class instance extends instance_skel {
 					errorText.match('EHOSTDOWN') ||
 					errorText.match('ETIMEDOUT')
 				) {
-					if (this.currentStatus != 2) {
-						this.status(this.STATUS_ERROR)
-						this.log(
-							'error',
-							`Connection lost to ${this.central?.HostName ? this.central.HostName : 'BirdDog Central 2.0'}`
-						)
-					}
+					this.updateStatus(InstanceStatus.ConnectionFailure)
+					/* this.log(
+						'error',
+						`Connection lost to ${this.central?.HostName ? this.central.HostName : 'BirdDog Central 2.0'}`,
+					) */
 				}
 			})
 	}
 
 	processData(cmd, subcmd, data) {
-		// this.debug(data);
+		// this.log('debug',data);
 		let changed = []
 		switch (cmd) {
 			case 'source':
@@ -228,6 +194,8 @@ class instance extends instance_skel {
 						changed.routerInfo = this.routerInfo(data)
 						break
 					case 'sconnect':
+						this.routerInfo(data)
+						changed.routerConnect = true
 					case 'dconnect':
 						this.sendCommand('router', 'list')
 						//changed.routerInfo = this.routerInfo(data)
@@ -267,7 +235,7 @@ class instance extends instance_skel {
 					case 'add':
 					case 'delete':
 						changed.retransmitters = this.listRetransmitters(data)
-						console.log('retransmitters', changed.retransmitters)
+						//console.log('retransmitters', changed.retransmitters)
 						break
 					case 'info':
 					case 'vconnect':
@@ -308,21 +276,21 @@ class instance extends instance_skel {
 			changed.retransmitters
 		) {
 			// Something has changed, so need to re-initialise actions/feedbacks/presets
-			this.actions()
+			this.initActions()
 			this.initFeedbacks()
 			this.initPresets()
 			this.updateVariables()
 
 			if (changed.routers || changed.generators || changed.retransmitters) {
 				// something has chnaged in generators/routers/retransmitters, so need to re-intialise variables
-				console.log(
+				/* console.log(
 					'routers',
 					changed.routers,
 					'generators',
 					changed.generators,
 					'retransmitters',
 					changed.retransmitters
-				)
+				) */
 				this.initVariables()
 				this.updateVariables()
 			}
@@ -388,7 +356,7 @@ class instance extends instance_skel {
 			this.sendCommand('gen', 'srs_list')
 			this.sendCommand('retransmtr', 'list')
 		}
-		this.debug('---- Central details: ', this.central)
+		this.log('debug', '---- Central details: ', this.central)
 	}
 	// Functions
 
@@ -675,4 +643,4 @@ class instance extends instance_skel {
 		return !(stored.join() == data.join())
 	}
 }
-exports = module.exports = instance
+runEntrypoint(BirdDogCentralInstance, upgradeScripts)

@@ -1,3 +1,1 @@
-module.exports = {
-	choicesUpgrade: function (context, config, actions, feedbacks) {},
-}
+export const upgradeScripts = []
