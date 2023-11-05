@@ -119,7 +119,7 @@ class BirdDogCentralInstance extends InstanceBase {
 			})
 			.then((json) => {
 				this.updateStatus(InstanceStatus.Ok)
-				console.log(json)
+				//console.log(json)
 				this.processData(cmd, subcmd, json)
 			})
 			.catch((err) => {
@@ -131,13 +131,11 @@ class BirdDogCentralInstance extends InstanceBase {
 					errorText.match('EHOSTDOWN') ||
 					errorText.match('ETIMEDOUT')
 				) {
-					if (this.currentStatus != 2) {
-						this.updateStatus(InstanceStatus.ConnectionFailure)
-						this.log(
-							'error',
-							`Connection lost to ${this.central?.HostName ? this.central.HostName : 'BirdDog Central 2.0'}`
-						)
-					}
+					this.updateStatus(InstanceStatus.ConnectionFailure)
+					/* this.log(
+						'error',
+						`Connection lost to ${this.central?.HostName ? this.central.HostName : 'BirdDog Central 2.0'}`,
+					) */
 				}
 			})
 	}
@@ -237,7 +235,7 @@ class BirdDogCentralInstance extends InstanceBase {
 					case 'add':
 					case 'delete':
 						changed.retransmitters = this.listRetransmitters(data)
-						console.log('retransmitters', changed.retransmitters)
+						//console.log('retransmitters', changed.retransmitters)
 						break
 					case 'info':
 					case 'vconnect':
@@ -285,14 +283,14 @@ class BirdDogCentralInstance extends InstanceBase {
 
 			if (changed.routers || changed.generators || changed.retransmitters) {
 				// something has chnaged in generators/routers/retransmitters, so need to re-intialise variables
-				console.log(
+				/* console.log(
 					'routers',
 					changed.routers,
 					'generators',
 					changed.generators,
 					'retransmitters',
 					changed.retransmitters
-				)
+				) */
 				this.initVariables()
 				this.updateVariables()
 			}
