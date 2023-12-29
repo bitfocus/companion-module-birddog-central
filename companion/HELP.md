@@ -20,11 +20,6 @@ This module allows you to control [BirdDog Central 2.0](https://birddog.tv/centr
 - Feedbacks
 
   - Generator Media Status
-  - Source Connected to Router
-  - Retransmitter Audio Source
-  - Retransmitter Audio Status
-  - Retransmitter Video Source
-  - Retransmitter Video Status
 
 - Variables
   - Software version
@@ -52,7 +47,12 @@ This module allows you to control [BirdDog Central 2.0](https://birddog.tv/centr
 
 - Feedbacks
 
-  - All Lite feedbacks
+  - Generator Media Status
+  - Source Connected to Router
+  - Retransmitter Audio Source
+  - Retransmitter Audio Status
+  - Retransmitter Video Source
+  - Retransmitter Video Status
 
 - Variables
   - All Lite Variables
