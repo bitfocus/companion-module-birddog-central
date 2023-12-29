@@ -51,24 +51,21 @@ export function getActions() {
 				default: this.central.sources[0] ? this.central.sources[0].id : 'No Sources found',
 			},
 			{
-				type: 'dropdown',
+				type: 'multidropdown',
 				label: 'Select Destination',
 				id: 'destination',
-				multiple: true,
 				choices: this.central.destinations,
 				default: this.central.destinations[0] ? this.central.destinations[0].id : 'No Destinations Found',
 			},
 		],
 		callback: ({ options }) => {
-			//console.log('-- in connectSource callback')
-			//console.log('--- options.destination', options.destination)
 			let destArray = []
 			let source = this.central.sources.find((element) => element.id == options.source)
 			options.destination.forEach((dest) => {
 				destArray.push(this.central.destinations.find((element) => element.id == dest).ip)
 			})
 			this.sendCommand('source', 'connect', {
-				hname: source.hname,
+				hname: source.host_name,
 				format: source.format,
 				dest: JSON.stringify({ destinations: destArray }),
 			})
@@ -274,7 +271,7 @@ export function getActions() {
 				let source = this.central.sources.find((element) => element.id == options.source)
 				this.sendCommand('source', 'add_srs', {
 					gname: options.group,
-					hname: source.hname,
+					hname: source.host_name,
 					format: source.format,
 				})
 			},
@@ -302,7 +299,7 @@ export function getActions() {
 				let source = this.central.sources.find((element) => element.id == options.source)
 				this.sendCommand('source', 'del_srs', {
 					gname: options.group,
-					hname: source.hname,
+					hname: source.host_name,
 					format: source.format,
 				})
 			},
@@ -330,7 +327,7 @@ export function getActions() {
 				let source = this.central.sources.find((element) => element.id == options.source)
 				this.sendCommand('source', 'connect', {
 					gname: options.group,
-					hname: source.hname,
+					hname: source.host_name,
 					format: source.format,
 				})
 			},
@@ -514,17 +511,14 @@ export function getActions() {
 					default: this.central.routers[0] ? this.central.routers[0].id : 'No Routers Found',
 				},
 				{
-					type: 'dropdown',
+					type: 'multidropdown',
 					label: 'Select Destination',
 					id: 'destination',
-					multiple: true,
 					choices: this.central.destinations,
 					default: this.central.destinations[0] ? this.central.destinations[0].id : 'No Destinations Found',
 				},
 			],
 			callback: ({ options }) => {
-				//console.log('-- in connectRouterToDest callback')
-				//console.log('--- options.destination', options.destination)
 				let destArray = []
 				options.destination.forEach((dest) => {
 					destArray.push(this.central.destinations.find((element) => element.id == dest).ip)
