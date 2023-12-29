@@ -118,7 +118,6 @@ class BirdDogCentralInstance extends InstanceBase {
 				let errorText = String(err)
 				this.log('debug', errorText)
 				if (errorText.match('ECONNREFUSED') || errorText.match('ENOTFOUND') || errorText.match('EHOSTDOWN')) {
-					this.log('debug', 'Connection error: ' + errorText)
 					this.updateStatus(InstanceStatus.ConnectionFailure)
 					/* this.log(
 						'error',
@@ -223,7 +222,6 @@ class BirdDogCentralInstance extends InstanceBase {
 					case 'add':
 					case 'delete':
 						changed.retransmitters = this.listRetransmitters(data)
-						//console.log('retransmitters', changed.retransmitters)
 						break
 					case 'info':
 					case 'vconnect':
@@ -344,7 +342,6 @@ class BirdDogCentralInstance extends InstanceBase {
 			this.sendCommand('gen', 'srs_list')
 			this.sendCommand('retransmtr', 'list')
 		}
-		//this.log('debug', '---- Central details: ', this.central)
 	}
 	// Functions
 

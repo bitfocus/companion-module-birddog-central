@@ -35,12 +35,7 @@ export function updateVariableDefinitions() {
 		}
 
 		if (this.central.retransmitters.length > 0) {
-			//console.log('-- in create new variables')
-			//console.log('--- retransmitters contains: ', this.central.retransmitters)
 			this.central.retransmitters.forEach((element, index) => {
-				//console.log('---- in retransmitters array. Element is: ', element)
-				//console.log('---- index is ', index)
-				//console.log('---- existing variables are ', variables)
 				variables.push({ name: 'Retransmitter ' + element.label, variableId: 'retransmitter_' + element.label })
 				variables.push({
 					name: 'Retransmitter ' + element.label + ' audio name',
@@ -58,7 +53,6 @@ export function updateVariableDefinitions() {
 					name: 'Retransmitter ' + element.label + ' video status',
 					variableId: 'retransmitter_' + element.label + '_videostatus',
 				})
-				console.log('---- new variables are ', variables)
 			})
 		}
 	}

@@ -60,8 +60,6 @@ export function getActions() {
 			},
 		],
 		callback: ({ options }) => {
-			//console.log('-- in connectSource callback')
-			//console.log('--- options.destination', options.destination)
 			let destArray = []
 			let source = this.central.sources.find((element) => element.id == options.source)
 			options.destination.forEach((dest) => {
@@ -523,8 +521,6 @@ export function getActions() {
 				},
 			],
 			callback: ({ options }) => {
-				//console.log('-- in connectRouterToDest callback')
-				//console.log('--- options.destination', options.destination)
 				let destArray = []
 				options.destination.forEach((dest) => {
 					destArray.push(this.central.destinations.find((element) => element.id == dest).ip)
