@@ -366,6 +366,7 @@ class BirdDogCentralInstance extends InstanceBase {
 		if (different) {
 			this.central.destinations = destinations
 		}
+		return different
 	}
 
 	listSourceGroups(data) {
