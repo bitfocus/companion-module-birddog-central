@@ -39,13 +39,6 @@ class BirdDogCentralInstance extends InstanceBase {
 	getConfigFields() {
 		return [
 			{
-				type: 'text',
-				id: 'info',
-				width: 12,
-				label: 'Information',
-				value: 'This module controls BirdDog Central 2.0 software.',
-			},
-			{
 				type: 'textinput',
 				id: 'host',
 				label: 'Device IP',
@@ -61,8 +54,7 @@ class BirdDogCentralInstance extends InstanceBase {
 		this.updateStatus(InstanceStatus.Connecting)
 
 		if (this.config.host !== undefined) {
-			this.log('debug', '----Host details:- ' + this.config.host)
-			this.init()
+			this.init(config)
 		} else {
 			this.updateStatus('error', 'Invalid IP address')
 		}
@@ -123,14 +115,10 @@ class BirdDogCentralInstance extends InstanceBase {
 				this.processData(cmd, subcmd, json)
 			})
 			.catch((err) => {
-				this.log('debug', err)
 				let errorText = String(err)
-				if (
-					errorText.match('ECONNREFUSED') ||
-					errorText.match('ENOTFOUND') ||
-					errorText.match('EHOSTDOWN') ||
-					errorText.match('ETIMEDOUT')
-				) {
+				this.log('debug', errorText)
+				if (errorText.match('ECONNREFUSED') || errorText.match('ENOTFOUND') || errorText.match('EHOSTDOWN')) {
+					this.log('debug', 'Connection error: ' + errorText)
 					this.updateStatus(InstanceStatus.ConnectionFailure)
 					/* this.log(
 						'error',
@@ -356,7 +344,7 @@ class BirdDogCentralInstance extends InstanceBase {
 			this.sendCommand('gen', 'srs_list')
 			this.sendCommand('retransmtr', 'list')
 		}
-		this.log('debug', '---- Central details: ', this.central)
+		//this.log('debug', '---- Central details: ', this.central)
 	}
 	// Functions
 
