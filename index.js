@@ -1,4 +1,4 @@
-import { InstanceBase, runEntrypoint, InstanceStatus } from '@companion-module/base'
+import { InstanceBase, runEntrypoint, InstanceStatus, Regex } from '@companion-module/base'
 import { getActions } from './actions.js'
 import { getFeedbacks } from './feedbacks.js'
 import { getPresets } from './presets.js'
@@ -41,9 +41,9 @@ class BirdDogCentralInstance extends InstanceBase {
 			{
 				type: 'textinput',
 				id: 'host',
-				label: 'Device IP',
+				label: 'Central Computer IP Address',
 				width: 6,
-				regex: this.REGEX_IP,
+				regex: Regex.IP,
 			},
 		]
 	}
